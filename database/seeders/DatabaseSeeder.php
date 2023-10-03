@@ -16,5 +16,12 @@ class DatabaseSeeder extends Seeder
         $this->call(KodePeranSeeder::class);
         $this->call(KodeProvinsiSeeder::class);
         $this->call(KodeKabupatenKotaSeeder::class);
+        $this->call(KodeKecamatanSeeder::class);
+        $this->call(KodeKelurahanSeeder::class);
+        $this->call(KodeUnitAuditSeeder::class);
+        $this->call(KodeJenisAnggaranSeeder::class);
+        $this->call(KodeJenisObrikSeeder::class);
+        $this->call(KodeGrupLingkupAuditSeeder::class);
+        $this->call(KodeLingkupAuditSeeder::class);
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tr_kode_sub_unit_audit', function (Blueprint $table) {
             $table->char('kode_sub_unit_audit', 6)->index()->primary();
             $table->char('kode_unit_audit', 4)->index();
-            $table->string('nama_sub_unit_audit');
+            $table->string('nama_sub_unit_audit')->nullable();
             $table->boolean('is_del')->default(false);
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));

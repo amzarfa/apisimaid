@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tr_kode_unit_audit', function (Blueprint $table) {
             $table->char('kode_unit_audit', 4)->index()->primary();
-            $table->string('nama_unit_audit');
-            $table->char('jenis', 20)->nullable();
+            $table->string('nama_unit_audit')->nullable();
+            $table->boolean('jenis')->nullable();
             $table->boolean('is_del')->default(false);
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));
