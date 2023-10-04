@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tr_kode_kabupatenkota', function (Blueprint $table) {
-            $table->foreign('kode_provinsi')->references('kode_provinsi')->on('tr_kode_provinsi');
+            $table->foreign('kode_provinsi')->references('kode_provinsi')->on('tr_kode_provinsi')->onUpdate('CASCADE');
         });
     }
 

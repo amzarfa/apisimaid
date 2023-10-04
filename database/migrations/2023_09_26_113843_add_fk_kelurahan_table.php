@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tr_kode_kelurahan', function (Blueprint $table) {
-            $table->foreign('kode_kecamatan')->references('kode_kecamatan')->on('tr_kode_kecamatan');
-            $table->foreign('kode_kabkota')->references('kode_kabkota')->on('tr_kode_kabupatenkota');
-            $table->foreign('kode_provinsi')->references('kode_provinsi')->on('tr_kode_provinsi');
+            $table->foreign('kode_kecamatan')->references('kode_kecamatan')->on('tr_kode_kecamatan')->onUpdate('CASCADE');
+            $table->foreign('kode_kabkota')->references('kode_kabkota')->on('tr_kode_kabupatenkota')->onUpdate('CASCADE');
+            $table->foreign('kode_provinsi')->references('kode_provinsi')->on('tr_kode_provinsi')->onUpdate('CASCADE');
         });
     }
 
