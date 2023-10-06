@@ -35,6 +35,11 @@ class UsersPeranSeeder extends Seeder
                 'nama_peran' => 'PEGAWAI',
                 'modul' => 'ren',
             ],
+            [
+                'kode_peran' => 'admin-ren',
+                'nama_peran' => 'ADMIN SIMAREN',
+                'modul' => 'ren',
+            ],
         ]);
     }
 }

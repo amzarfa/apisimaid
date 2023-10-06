@@ -29,7 +29,9 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            Route::middleware('api')
+            // Mengatur namespace global ke App\Http\Controllers
+            Route::namespace('App\Http\Controllers')
+                ->middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 

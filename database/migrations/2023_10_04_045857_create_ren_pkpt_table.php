@@ -42,6 +42,8 @@ return new class extends Migration
             $table->smallInteger('jumlah_lhp_terbit')->nullable();
             $table->string('kebutuhan_sarpras')->nullable();
             $table->string('keterangan')->nullable();
+
+            // Audit Trails
             $table->boolean('is_del')->default(false);
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));
