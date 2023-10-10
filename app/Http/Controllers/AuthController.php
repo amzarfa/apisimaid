@@ -7,8 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Masterdata\KodeUnitAudit;
+use App\Models\Masterdata\KodeSubUnitAudit;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -25,19 +28,27 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->plainTextToken;
+
             // Menghapus angka yang mewakili jumlah login dari token
             $tokenParts = explode('|', $token);
             if (count($tokenParts) === 2) {
                 $token = $tokenParts[1];
             }
+
+            $unitAudit = KodeUnitAudit::where('kode_unit_audit', '=', $user->kode_unit_audit)->select('nama_unit_audit')->first();
+            $subUnitAudit = KodeSubUnitAudit::where('kode_sub_unit_audit', '=', $user->kode_sub_unit_audit)->select('nama_sub_unit_audit')->first();
+
             return response()->json([
                 'token' => $token,
                 'name' => $user->name,
+                'email' => $user->email,
                 'nip' => $user->nip,
-                'kode_unit_audit' => $user->kode_unit_audit,
-                'kode_sub_unit_audit' => $user->kode_sub_unit_audit,
-                'token_type' => 'bearer',
-                'peran_ren' => $user->peran_ren,
+                'kodeUnitAudit' => $user->kode_unit_audit,
+                'namaUnitAudit' => $unitAudit->nama_unit_audit,
+                'kodeSubUnitAudit' => $user->kode_sub_unit_audit,
+                'namaSubUnitAudit' => $subUnitAudit->nama_sub_unit_audit,
+                'tokenType' => 'bearer',
+                'peranRen' => $user->peran_ren,
             ], 200);
         } else {
             return response()->json(['message' => 'Login gagal, periksa kembali email dan password Anda'], 401);

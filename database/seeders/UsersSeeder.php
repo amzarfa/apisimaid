@@ -18,7 +18,16 @@ class UsersSeeder extends Seeder
             [
                 'name' => 'Muhammad Amzar Fadliatma Putra',
                 'nip' => '199209162020121007',
-                'email' => 'aku@amzar.id',
+                'email' => 'amzarfa7@gmail.com',
+                'password' => Hash::make('password'),
+                'kode_unit_audit' => '3198',
+                'kode_sub_unit_audit' => '319801',
+                'peran_ren' => 'admin-ren',
+            ],
+            [
+                'name' => 'Gugun Mediamer',
+                'nip' => '199801012020121003',
+                'email' => 'mediamergugun2@gmail.com',
                 'password' => Hash::make('password'),
                 'kode_unit_audit' => '3198',
                 'kode_sub_unit_audit' => '319801',
