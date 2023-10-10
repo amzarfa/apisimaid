@@ -6,12 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
-use App\Models\Masterdata\KodeUnitAudit;
-use App\Models\Masterdata\KodeSubUnitAudit;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPasswordMail;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Helpers\Helper;
 
 class AuthController extends Controller
 {
@@ -35,8 +33,8 @@ class AuthController extends Controller
                 $token = $tokenParts[1];
             }
 
-            $unitAudit = KodeUnitAudit::where('kode_unit_audit', '=', $user->kode_unit_audit)->select('nama_unit_audit')->first();
-            $subUnitAudit = KodeSubUnitAudit::where('kode_sub_unit_audit', '=', $user->kode_sub_unit_audit)->select('nama_sub_unit_audit')->first();
+            $unitAudit = Helper::namaUnitAudit();
+            $namaSubUnitAudit = Helper::namaSubUnitAudit();
 
             return response()->json([
                 'token' => $token,
@@ -44,9 +42,9 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'nip' => $user->nip,
                 'kodeUnitAudit' => $user->kode_unit_audit,
-                'namaUnitAudit' => $unitAudit->nama_unit_audit,
+                'namaUnitAudit' => $unitAudit,
                 'kodeSubUnitAudit' => $user->kode_sub_unit_audit,
-                'namaSubUnitAudit' => $subUnitAudit->nama_sub_unit_audit,
+                'namaSubUnitAudit' => $namaSubUnitAudit,
                 'tokenType' => 'bearer',
                 'peranRen' => $user->peran_ren,
             ], 200);
