@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class KodeKecamatan extends Model
 {
     use HasFactory;
+    protected $table = 'tr_kode_kecamatan';
 }

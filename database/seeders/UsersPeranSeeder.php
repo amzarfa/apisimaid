@@ -40,6 +40,26 @@ class UsersPeranSeeder extends Seeder
                 'nama_peran' => 'ADMIN SIMAREN',
                 'modul' => 'ren',
             ],
+            [
+                'kode_peran' => 'admin-lak',
+                'nama_peran' => 'ADMIN SIMALAK',
+                'modul' => 'lak',
+            ],
+            [
+                'kode_peran' => 'admin-por',
+                'nama_peran' => 'ADMIN SIMAPOR',
+                'modul' => 'por',
+            ],
+            [
+                'kode_peran' => 'admin-simhpnas',
+                'nama_peran' => 'ADMIN SIMHPNAS',
+                'modul' => 'simhpnas',
+            ],
+            [
+                'kode_peran' => 'admin',
+                'nama_peran' => 'ADMINISTRATOR',
+                'modul' => 'all',
+            ],
         ]);
     }
 }

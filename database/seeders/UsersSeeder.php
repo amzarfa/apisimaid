@@ -22,7 +22,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'kode_unit_audit' => '3198',
                 'kode_sub_unit_audit' => '319801',
-                'peran_ren' => 'admin-ren',
+                'peran' => 'admin',
             ],
             [
                 'name' => 'Gugun Mediamer',
@@ -31,7 +31,7 @@ class UsersSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'kode_unit_audit' => '3198',
                 'kode_sub_unit_audit' => '319801',
-                'peran_ren' => 'admin-ren',
+                'peran' => 'admin',
             ],
         ];
 

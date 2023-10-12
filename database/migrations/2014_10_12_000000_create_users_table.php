@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('kode_unit_audit', 4)->nullable();
             $table->string('kode_sub_unit_audit', 6)->nullable();
+            $table->string('peran', 20)->nullable()->default('user');
             $table->string('peran_ren', 20)->nullable();
             $table->string('peran_lak', 20)->nullable();
             $table->string('peran_por', 20)->nullable();

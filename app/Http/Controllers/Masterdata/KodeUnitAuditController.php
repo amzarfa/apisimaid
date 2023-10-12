@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
-use App\Models\Masterdata\KodePeran;
+use App\Models\Masterdata\KodeUnitAudit;
 
-class KodePeranController extends Controller
+class KodeUnitAuditController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -25,10 +25,11 @@ class KodePeranController extends Controller
      */
     public function index()
     {
-        $data = KodePeran::select(
-            'id_peran as id',
-            'kode_peran as kodePeran',
-            'nama_peran as namaPeran',
+        $data = KodeUnitAudit::select(
+            'kode_unit_audit as kodeUnitAudit',
+            'nama_unit_audit as namaUnitAudit',
+            'jenis',
+            'jenis_unit_audit as jenisUnitAudit',
         )->where('is_del', '=', 0)->get();
         $response = Helper::labelMessageSuccessWithCountData($data);
         return response()->json($response, 200);
@@ -49,25 +50,27 @@ class KodePeranController extends Controller
     {
         $auth = Auth::user();
         if ($auth->peran != 'admin') {
-            $response = Helper::labelMessageForbidden('menambah Peran Tim');
+            $response = Helper::labelMessageForbidden('menambah Unit Audit');
             return response()->json($response, 403);
         } else {
             // Store
-            $storeData = new KodePeran();
-            $storeData->kode_peran = $request->kodePeran;
-            $storeData->nama_peran = $request->namaPeran;
+            $storeData = new KodeUnitAudit();
+            $storeData->kode_unit_audit = $request->kodeUnitAudit;
+            $storeData->nama_unit_audit = $request->namaUnitAudit;
+            $storeData->jenis = $request->jenis;
+            $storeData->jenis_unit_audit = $request->jenisUnitAudit;
             $storeData->created_by = $auth->name;
             $storeData->save();
 
             // Log Activity
-            $key = $storeData->id;
-            $page = 'Tambah Peran Tim';
-            $activity = $auth->name . ' menambah peran tim. Id Peran Tim : ' . $key;
+            $key = $storeData->kode_unit_audit;
+            $page = 'Tambah Unit Audit';
+            $activity = $auth->name . ' menambah Unit Audit. Id Unit Audit : ' . $key;
             $method = 'POST';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menambah Peran Tim. Id Peran Tim : ' . $key);
+            $response = Helper::labelMessageSuccess('menambah Unit Audit. Id Unit Audit : ' . $key);
             return response()->json($response, 200);
         }
     }
@@ -77,11 +80,12 @@ class KodePeranController extends Controller
      */
     public function show(string $id)
     {
-        $data = KodePeran::select(
-            'id_peran as id',
-            'kode_peran as kodePeran',
-            'nama_peran as namaPeran',
-        )->where('id_peran', '=', $id)->first();
+        $data = KodeUnitAudit::select(
+            'kode_unit_audit as kodeUnitAudit',
+            'nama_unit_audit as namaUnitAudit',
+            'jenis as jenis',
+            'jenis_unit_audit as jenisUnitAudit',
+        )->where('kode_unit_audit', '=', $id)->first();
         $response = Helper::labelMessageSuccessWithData($data);
         return response()->json($response, 200);
     }
@@ -101,25 +105,27 @@ class KodePeranController extends Controller
     {
         $auth = Auth::user();
         if ($auth->peran != 'admin') {
-            $response = Helper::labelMessageForbidden('mengubah Kode Peran User');
+            $response = Helper::labelMessageForbidden('mengubah Kode Unit Audit');
             return response()->json($response, 403);
         } else {
-            $data = KodePeran::where('id_peran', '=', $id)
+            $data = KodeUnitAudit::where('kode_unit_audit', '=', $id)
                 ->update([
-                    'kode_peran' => $request->kodePeran,
-                    'nama_peran' => $request->namaPeran,
+                    'kode_unit_audit' => $request->kodeUnitAudit,
+                    'nama_unit_audit' => $request->namaUnitAudit,
+                    'jenis' => $auth->jenis,
+                    'jenis_unit_audit' => $auth->jenisUnitAudit,
                     'updated_by' => $auth->name,
                 ]);
 
             // Log Activity
             $key = $id;
-            $page = 'Ubah Peran Tim';
-            $activity = $auth->name . ' mengubah peran tim. Kode Peran Tim : ' . $id;
+            $page = 'Ubah Unit Audit';
+            $activity = $auth->name . ' mengubah Unit Audit. Kode Unit Audit : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengubah Peran Tim: ' . $key);
+            $response = Helper::labelMessageSuccess('mengubah Unit Audit: ' . $key);
             return response()->json($response, 200);
         }
     }
@@ -131,20 +137,20 @@ class KodePeranController extends Controller
     {
         $auth = Auth::user();
         if ($auth->peran != 'admin') {
-            $response = Helper::labelMessageForbidden('menghapus Peran Tim');
+            $response = Helper::labelMessageForbidden('menghapus Unit Audit');
             return response()->json($response, 403);
         } else {
-            $data = KodePeran::where('id_peran', '=', $id)->delete();
+            $data = KodeUnitAudit::where('kode_unit_audit', '=', $id)->delete();
 
             // Log Activity
             $key = $id;
-            $page = 'Hapus Peran Tim';
-            $activity = $auth->name . ' menghapus peran Tim. Id Peran Tim : ' . $id;
+            $page = 'Hapus Unit Audit';
+            $activity = $auth->name . ' menghapus Unit Audit. Kode Unit Audit : ' . $key;
             $method = 'DELETE';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menghapus Peran Tim. Kode Peran Tim : ' . $key);
+            $response = Helper::labelMessageSuccess('menghapus Unit Audit. Kode Unit Audit : ' . $key);
             return response()->json($response, 200);
         }
     }

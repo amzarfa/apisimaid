@@ -49,7 +49,7 @@ class UsersPeranController extends Controller
     public function store(Request $request)
     {
         $auth = Auth::user();
-        if ($auth->peran_ren != 'admin-ren') {
+        if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menambah Kode Peran User');
             return response()->json($response, 403);
         } else {
@@ -70,7 +70,7 @@ class UsersPeranController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menambah Kode Peran User');
+            $response = Helper::labelMessageSuccess('menambah Kode Peran User. Kode Peran User : ' . $key);
             return response()->json($response, 200);
         }
     }
@@ -104,7 +104,7 @@ class UsersPeranController extends Controller
     public function update(Request $request, string $id)
     {
         $auth = Auth::user();
-        if ($auth->peran_ren != 'admin-ren') {
+        if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengubah Kode Peran User');
             return response()->json($response, 403);
         } else {
@@ -119,12 +119,12 @@ class UsersPeranController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Ubah Kode Peran User';
-            $activity = $auth->name . ' mengubah kode peran user. Kode Peran User : ' . $id;
+            $activity = $auth->name . ' mengubah kode peran user. Kode Peran User : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengubah Kode Peran User: ' . $id);
+            $response = Helper::labelMessageSuccess('mengubah Kode Peran User: ' . $key);
             return response()->json($response, 200);
         }
     }
@@ -135,7 +135,7 @@ class UsersPeranController extends Controller
     public function destroy(string $id)
     {
         $auth = Auth::user();
-        if ($auth->peran_ren != 'admin-ren') {
+        if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menghapus Kode Peran User');
             return response()->json($response, 403);
         } else {
@@ -144,12 +144,12 @@ class UsersPeranController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Hapus Kode Peran User';
-            $activity = $auth->name . ' menghapus kode peran user. Kode Peran User : ' . $id;
+            $activity = $auth->name . ' menghapus kode peran user. Kode Peran User : ' . $key;
             $method = 'DELETE';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menghapus Kode Peran User: ' . $id);
+            $response = Helper::labelMessageSuccess('menghapus Kode Peran User: ' . $key);
             return response()->json($response, 200);
         }
     }

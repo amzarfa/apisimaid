@@ -15,6 +15,7 @@ return new class extends Migration
             $table->char('kode_unit_audit', 4)->index()->primary();
             $table->string('nama_unit_audit')->nullable();
             $table->boolean('jenis')->nullable();
+            $table->string('jenis_unit_audit')->nullable();
             $table->boolean('is_del')->default(false);
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));
