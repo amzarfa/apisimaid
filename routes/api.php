@@ -24,9 +24,13 @@ Route::group(['middleware' => ['cors']], function () {
     Route::post('reset-link', 'AuthController@sendResetEmail');
     Route::post('set-new-password', 'AuthController@setNewPassword');
 
+    // Route After Login
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('logout', 'AuthController@logout');
         Route::get('profile', 'ProfileController@profile');
+
+        // References
         Route::resource('users-peran', 'UsersPeranController');
+        Route::resource('kode-peran', 'Masterdata/KodePeranController');
     });
 });
