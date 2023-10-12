@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::group(['middleware' => ['cors']], function () {
     // Route untuk login
     Route::post('login', 'AuthController@login');
@@ -42,5 +38,13 @@ Route::group(['middleware' => ['cors']], function () {
 
         Route::resource('unitaudit', 'Masterdata\KodeUnitAuditController');
         Route::resource('subunitaudit', 'Masterdata\KodeSubUnitAuditController');
+        Route::resource('jenisanggaran', 'Masterdata\KodeJenisAnggaranController');
+        Route::resource('jenisobrik', 'Masterdata\KodeJenisObrikController');
+        Route::resource('gruplingkupaudit', 'Masterdata\KodeGrupLingkupAuditController');
+        Route::resource('kodelingkupaudit', 'Masterdata\KodeLingkupAuditController');
+
+        Route::resource('unitobrik', 'Masterdata\KodeUnitObrikController');
+        Route::resource('bidangobrik', 'Masterdata\KodeBidangObrikController');
+        Route::resource('subbidangobrik', 'Masterdata\KodeSubBidangObrikController');
     });
 });

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('kode_unit_audit', 4)->nullable();
-            $table->string('kode_sub_unit_audit', 6)->nullable();
+            $table->string('kode_unit_audit', 4)->index();
+            $table->string('kode_sub_unit_audit', 6)->index();
             $table->string('peran', 20)->nullable()->default('user');
             $table->string('peran_ren', 20)->nullable();
             $table->string('peran_lak', 20)->nullable();

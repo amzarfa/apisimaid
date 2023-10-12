@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class KodeGrupLingkupAudit extends Model
 {
     use HasFactory;
+    protected $table = 'tr_kode_grup_lingkup_audit';
 }

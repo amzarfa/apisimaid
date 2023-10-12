@@ -25,7 +25,7 @@ class KodeSubUnitAuditController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = KodeSubUnitAudit::select(
             'tr_kode_sub_unit_audit.kode_unit_audit as kodeUnitAudit',
@@ -34,7 +34,9 @@ class KodeSubUnitAuditController extends Controller
             'tr_kode_sub_unit_audit.nama_sub_unit_audit as namaSubUnitAudit',
         )
             ->leftjoin('tr_kode_unit_audit as unitaudit', 'unitaudit.kode_unit_audit', '=', 'tr_kode_sub_unit_audit.kode_unit_audit')
-            ->where('tr_kode_sub_unit_audit.is_del', '=', 0)->get();
+            ->where('tr_kode_sub_unit_audit.is_del', '=', 0)
+            ->where('tr_kode_sub_unit_audit.kode_unit_audit', '=', $request->kodeUnitAudit)
+            ->get();
         $response = Helper::labelMessageSuccessWithCountData($data);
         return response()->json($response, 200);
     }

@@ -12,6 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->foreign('kode_unit_audit')->references('kode_unit_audit')->on('tr_kode_unit_audit')->onUpdate('CASCADE');
+            $table->foreign('kode_sub_unit_audit')->references('kode_sub_unit_audit')->on('tr_kode_sub_unit_audit')->onUpdate('CASCADE');
+            $table->foreign('peran')->references('kode_peran')->on('users_peran')->onUpdate('CASCADE');
             $table->foreign('peran_ren')->references('kode_peran')->on('users_peran')->onUpdate('CASCADE');
             $table->foreign('peran_lak')->references('kode_peran')->on('users_peran')->onUpdate('CASCADE');
             $table->foreign('peran_por')->references('kode_peran')->on('users_peran')->onUpdate('CASCADE');
@@ -25,6 +28,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['kode_unit_audit']);
+            $table->dropForeign(['kode_sub_unit_audit']);
+            $table->dropForeign(['peran']);
             $table->dropForeign(['peran_ren']);
             $table->dropForeign(['peran_lak']);
             $table->dropForeign(['peran_por']);
