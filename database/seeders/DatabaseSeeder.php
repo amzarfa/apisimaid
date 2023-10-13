@@ -25,5 +25,8 @@ class DatabaseSeeder extends Seeder
         $this->call(KodeJenisObrikSeeder::class);
         $this->call(KodeGrupLingkupAuditSeeder::class);
         $this->call(KodeLingkupAuditSeeder::class);
+        $this->call(KodeUnitObrikSeeder::class);
+        $this->call(KodeBidangObrikSeeder::class);
+        $this->call(KodeSubBidangObrikSeeder::class);
     }
 }

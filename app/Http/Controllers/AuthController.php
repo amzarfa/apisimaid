@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
@@ -86,6 +87,13 @@ class AuthController extends Controller
         // Kirim email
         Mail::to($email)->send(new ResetPasswordMail($email, $token));
 
+        // Log Activity
+        $key = $user->id;
+        $page = 'Mencoba Reset Password';
+        $activity = $user->name . ' mencoba melakukan Reset Password. User ID : ' . $key;
+        $method = 'POST';
+        Helper::createLogActivity($key, $page, $activity, $method);
+
         return response()->json([
             'message' => 'Email reset password telah dikirim',
             'email' => $email,
@@ -116,6 +124,13 @@ class AuthController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
+            // Log Activity
+            $key = $request->email;
+            $page = 'Reset Password Baru';
+            $activity = $request->email . ' melakukan Reset Password';
+            $method = 'POST';
+            Helper::createLogActivity($key, $page, $activity, $method);
+
             return response()->json(['message' => 'Password berhasil diubah'], 200);
         }
 

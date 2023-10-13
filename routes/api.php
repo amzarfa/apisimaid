@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['cors']], function () {
     // Route untuk login
     Route::post('login', 'AuthController@login');
+    Route::post('changepassword', 'ChangePasswordController@changePassword');
     Route::post('reset-link', 'AuthController@sendResetEmail');
     Route::post('set-new-password', 'AuthController@setNewPassword');
 
