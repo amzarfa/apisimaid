@@ -27,17 +27,14 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->plainTextToken;
-
             // Menghapus angka yang mewakili jumlah login dari token
             $tokenParts = explode('|', $token);
             if (count($tokenParts) === 2) {
                 $token = $tokenParts[1];
             }
-
             $unitAudit = Helper::namaUnitAudit();
             $namaSubUnitAudit = Helper::namaSubUnitAudit();
-
-            return response()->json([
+            $data = [
                 'token' => $token,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -47,10 +44,26 @@ class AuthController extends Controller
                 'kodeSubUnitAudit' => $user->kode_sub_unit_audit,
                 'namaSubUnitAudit' => $namaSubUnitAudit,
                 'tokenType' => 'bearer',
+                'peran' => $user->peran,
                 'peranRen' => $user->peran_ren,
-            ], 200);
+            ];
+            $response = array(
+                'status' => true,
+                'statusCode' => 200,
+                'message' => 'Success',
+                'data' => $data,
+            );
+            return response()
+                ->json($response, 200)
+                ->withCookie('auth', $token)
+                ->withCookie('jwt', $token);
         } else {
-            return response()->json(['message' => 'Login gagal, periksa kembali email dan password Anda'], 401);
+            $response = array(
+                'status' => false,
+                'statusCode' => 401,
+                'message' => 'Login gagal, periksa kembali email dan password Anda',
+            );
+            return response()->json($response, 401);
         }
     }
 
@@ -58,7 +71,12 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::user()->tokens()->delete();
-        return response()->json(['message' => 'Logout berhasil'], 200);
+        $response = array(
+            'status' => true,
+            'status_code' => 200,
+            'message' => 'Successfully logged out',
+        );
+        return response()->json($response, 200);
     }
 
     // Method untuk mengirimkan email dan menampilkan token untuk reset password

@@ -28,5 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call(KodeUnitObrikSeeder::class);
         $this->call(KodeBidangObrikSeeder::class);
         $this->call(KodeSubBidangObrikSeeder::class);
+        $this->call(KodeJenisPengawasanSeeder::class);
+        $this->call(KodeAreaPengawasanSeeder::class);
+        $this->call(KodeTingkatResikoSeeder::class);
     }
 }

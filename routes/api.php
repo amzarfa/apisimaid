@@ -14,9 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('login', function () {
+//     return response()->json(['message' => 'Unauthenticated.'], 401);
+// })->name('login');
+
 Route::group(['middleware' => ['cors']], function () {
     // Route untuk login
-    Route::post('login', 'AuthController@login');
+    Route::post('do-login', 'AuthController@login');
     Route::post('changepassword', 'ChangePasswordController@changePassword');
     Route::post('reset-link', 'AuthController@sendResetEmail');
     Route::post('set-new-password', 'AuthController@setNewPassword');
@@ -31,7 +35,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('kabkota', 'Masterdata\KodeKabkotaController');
         Route::resource('kecamatan', 'Masterdata\KodeKecamatanController');
         Route::resource('kelurahan', 'Masterdata\KodeKelurahanController');
-        Route::get('/searchkelurahan', 'Masterdata\KodeKelurahanController@searchKelurahan');
+        Route::get('searchkelurahan', 'Masterdata\KodeKelurahanController@searchKelurahan');
 
         // References
         Route::resource('users-peran', 'UsersPeranController');
@@ -46,5 +50,13 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('unitobrik', 'Masterdata\KodeUnitObrikController');
         Route::resource('bidangobrik', 'Masterdata\KodeBidangObrikController');
         Route::resource('subbidangobrik', 'Masterdata\KodeSubBidangObrikController');
+
+        Route::resource('jenispengawasan', 'Masterdata\KodeJenisPengawasanController');
+        Route::resource('areapengawasan', 'Masterdata\KodeAreaPengawasanController');
+        Route::resource('tingkatresiko', 'Masterdata\KodeTingkatResikoController');
+
+        Route::resource('ren/jakwas', 'Ren\JakwasController');
+        Route::resource('ren/pkpt', 'Ren\PkptController');
+        Route::resource('ren/pkau', 'Ren\PkauController');
     });
 });

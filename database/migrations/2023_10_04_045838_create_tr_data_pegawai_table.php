@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tr_data_pegawai', function (Blueprint $table) {
             $table->id();
-            $table->char('kode_sub_unit_audit', 6)->index();
-            $table->char('kode_unit_audit', 4)->index();
+            $table->char('kode_sub_unit_audit', 6)->index()->nullable();
+            $table->char('kode_unit_audit', 4)->index()->nullable();
             $table->string('nip', 30)->nullable();
             $table->string('nip_lama', 30)->nullable();
             $table->string('nama')->nullable();

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ren_pkpt', function (Blueprint $table) {
-            $table->id('id_pkpt');
+        Schema::create('ren_pkau', function (Blueprint $table) {
+            $table->id('id_pkau');
             $table->bigInteger('id_jakwas')->index()->nullable();
 
             $table->char('kode_sub_unit_audit', 6)->index();
@@ -30,9 +30,9 @@ return new class extends Migration
             $table->char('kode_bidang_obrik', 9)->index()->nullable();
             $table->string('nama_bidang_obrik')->nullable();
 
-            $table->string('nama_pkpt')->nullable();
-            $table->text('deskripsi_pkpt')->nullable();
-            $table->year('tahun_pkpt')->nullable();
+            $table->string('nama_pkau')->nullable();
+            $table->text('deskripsi_pkau')->nullable();
+            $table->year('tahun_pkau')->nullable();
             $table->date('rmp')->nullable();
             $table->date('rpl')->nullable();
             $table->smallInteger('jumlah_hp_wpj')->nullable();
@@ -59,6 +59,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ren_pkpt');
+        Schema::dropIfExists('ren_pkau');
     }
 };
