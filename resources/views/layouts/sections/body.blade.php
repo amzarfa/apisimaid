@@ -21,6 +21,6 @@
     <div style="text-align:center !important;" class="errortext">This area is forbidden. Turn back now!</div>
 
     <div style="text-align:center !important;" class="errortext">
-        {{ Illuminate\Foundation\Application::VERSION }}
+        {{ Illuminate\Foundation\Application::VERSION }} - Url : {{ url('', []) }}
     </div>
 </body>
