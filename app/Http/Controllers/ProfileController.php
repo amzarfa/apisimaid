@@ -39,14 +39,4 @@ class ProfileController extends Controller
         $response = Helper::labelMessageSuccessWithData($data);
         return response()->json($response, 200);
     }
-
-    public function index()
-    {
-        $data = DB::table('tr_kode_provinsi')->select(
-            'kode_provinsi as kodeProvinsi',
-            'nama_provinsi as namaProvinsi',
-        )->where('is_del', '=', 0)->get();
-        $response = Helper::labelMessageSuccessWithCountData($data);
-        return response()->json($response, 200);
-    }
 }
