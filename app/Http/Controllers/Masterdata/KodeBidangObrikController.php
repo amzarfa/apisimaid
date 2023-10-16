@@ -62,8 +62,8 @@ class KodeBidangObrikController extends Controller
             return response()->json($response, 403);
         } else {
             // Define Kode Unit Audit & Kode Unit Obrik dari Kode Bidang Obrik yang diberikan
-            $kodeUnitAudit = substr($request->kodeUnitObrik, 0, 4);
-            $kodeUnitObrik = substr($request->kodeUnitObrik, 0, 6);
+            $kodeUnitAudit = substr($request->kodeBidangObrik, 0, 4);
+            $kodeUnitObrik = substr($request->kodeBidangObrik, 0, 6);
 
             // Store
             $storeData = new KodeBidangObrik();
@@ -128,7 +128,7 @@ class KodeBidangObrikController extends Controller
         } else {
             $data = KodeBidangObrik::where('kode_bidang_obrik', '=', $id)
                 ->update([
-                    'nama_unit_obrik' => $request->namaUnitObrik,
+                    'nama_bidang_obrik' => $request->namaBidangObrik,
                     'updated_by' => $auth->name,
                 ]);
 

@@ -26,10 +26,6 @@ Route::group(['middleware' => ['cors']], function () {
         Route::post('logout', 'AuthController@logout');
         Route::get('profile', 'ProfileController@profile');
 
-        // References
-        Route::resource('users-peran', 'UsersPeranController');
-        Route::resource('peran-tim', 'Masterdata\KodePeranController');
-
         // Wilayah
         Route::resource('provinsi', 'Masterdata\KodeProvinsiController');
         Route::resource('kabkota', 'Masterdata\KodeKabkotaController');
@@ -37,6 +33,9 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('kelurahan', 'Masterdata\KodeKelurahanController');
         Route::get('/searchkelurahan', 'Masterdata\KodeKelurahanController@searchKelurahan');
 
+        // References
+        Route::resource('users-peran', 'UsersPeranController');
+        Route::resource('peran-tim', 'Masterdata\KodePeranController');
         Route::resource('unitaudit', 'Masterdata\KodeUnitAuditController');
         Route::resource('subunitaudit', 'Masterdata\KodeSubUnitAuditController');
         Route::resource('jenisanggaran', 'Masterdata\KodeJenisAnggaranController');
