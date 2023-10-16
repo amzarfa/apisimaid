@@ -7,25 +7,25 @@
     <meta name="description" content="Sistem Informasi Manajemen APIP Indonesia - Powered by Pusinfowas BPKP">
     <meta name="keywords" content="SIMHPNAS BPKP">
     <meta name="author" content="amzarfa x gugunmdr">
-    <link rel="icon" type="image/png" href="/img/simhp/icon-logo.svg">
+    <link rel="icon" type="image/png" href="{{ asset('/img/simhp/icon-logo.svg') }}">
 
     <!-- Google / Search Engine Tags -->
     <meta itemprop="name" content="SIMA ID">
     <meta itemprop="description" content="Sistem Informasi Manajemen APIP Indonesia - Powered by Pusinfowas BPKP">
-    <meta itemprop="image" content="/img/simhp/fb-debugger.png">
+    <meta itemprop="image" content="{{ asset('/img/simhp/fb-debugger.png') }}">
 
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="">/
     <meta property="og:type" content="website">
     <meta property="og:title" content="SIMA ID">
     <meta property="og:description" content="Sistem Informasi Manajemen APIP Indonesia - Powered by Pusinfowas BPKP">
-    <meta property="og:image" content="/img/simhp/fb-debugger.png">
+    <meta property="og:image" content="{{ asset('/img/simhp/fb-debugger.png') }}">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="SIMA ID">
     <meta name="twitter:description" content="Sistem Informasi Manajemen APIP Indonesia - Powered by Pusinfowas BPKP">
-    <meta name="twitter:image" content="/img/simhp/fb-debugger.png">
+    <meta name="twitter:image" content="{{ asset('/img/simhp/fb-debugger.png') }}">
 
     <script>
         window.Laravel = {
@@ -46,7 +46,7 @@
             position: relative;
             top: -50px;
             transform: scale(0.8);
-            background: url("/img/HauntedHouseBackground.png");
+            background: url("{{ asset('/img/HauntedHouseBackground.png') }}");
             background-repeat: no-repeat;
             background-position: center;
             background-size: 700px 600px;
