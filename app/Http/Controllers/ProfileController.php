@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
@@ -36,6 +37,16 @@ class ProfileController extends Controller
             ->first();
 
         $response = Helper::labelMessageSuccessWithData($data);
+        return response()->json($response, 200);
+    }
+
+    public function index()
+    {
+        $data = DB::table('tr_kode_provinsi')->select(
+            'kode_provinsi as kodeProvinsi',
+            'nama_provinsi as namaProvinsi',
+        )->where('is_del', '=', 0)->get();
+        $response = Helper::labelMessageSuccessWithCountData($data);
         return response()->json($response, 200);
     }
 }

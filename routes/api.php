@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('testtanpacors', 'ProfileController@index');
+
 Route::group(['middleware' => ['cors']], function () {
+    Route::get('testdengancors', 'ProfileController@index');
     // Route untuk login
     Route::post('login', 'AuthController@login');
     Route::post('changepassword', 'ChangePasswordController@changePassword');
