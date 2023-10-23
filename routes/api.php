@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['cors']], function () {
     // Route untuk login
     Route::post('login', 'AuthController@login');
-    Route::post('changepassword', 'ChangePasswordController@changePassword');
     Route::post('reset-link', 'AuthController@sendResetEmail');
     Route::post('set-new-password', 'AuthController@setNewPassword');
 
     // Route After Login
     Route::group(['middleware' => ['auth:api']], function () {
+        Route::post('changepassword', 'ChangePasswordController@changePassword');
         Route::post('logout', 'AuthController@logout');
         Route::get('profile', 'ProfileController@profile');
 
