@@ -5,8 +5,8 @@ namespace App\Models\Ren;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pkau extends Model
+class Jakwas extends Model
 {
     use HasFactory;
-    protected $table = 'ren_pkau';
+    protected $table = 'ren_jakwas';
 }

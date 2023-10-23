@@ -15,6 +15,7 @@ class KodeSubUnitAuditSeeder extends Seeder
     {
         $data = [
             ['kode_sub_unit_audit' => '319801', 'kode_unit_audit' => '3198', 'nama_sub_unit_audit' => 'IRBAN 1 LATIHAN'],
+            ['kode_sub_unit_audit' => '160500', 'kode_unit_audit' => '1605', 'nama_sub_unit_audit' => 'INSPEKTORAT KABUPATEN MUSI RAWAS'],
         ];
 
         // Ubah nama tabel sesuai dengan tabel yang digunakan

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('golongan_ruang', 20)->nullable();
             $table->string('nama_pangkat', 30)->nullable();
             $table->string('jabatan', 50)->nullable();
+            $table->string('status', 50)->nullable()->default('active');
             $table->boolean('is_del')->default(false);
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));
