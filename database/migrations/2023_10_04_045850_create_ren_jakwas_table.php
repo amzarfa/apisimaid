@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('ren_jakwas', function (Blueprint $table) {
             $table->id('id_jakwas');
+            $table->char('kode_sub_unit_audit', 6)->index();
             $table->char('kode_unit_audit', 4)->index();
             $table->year('tahun')->nullable();
             $table->string('nama_jakwas')->nullable();
-            $table->string('ket')->nullable();
+            $table->string('deskripsi')->nullable();
 
             // Audit Trails
             $table->boolean('is_del')->default(false);

@@ -32,5 +32,8 @@ class DatabaseSeeder extends Seeder
         $this->call(KodeAreaPengawasanSeeder::class);
         $this->call(KodeTingkatResikoSeeder::class);
         $this->call(TabelDataPegawaiSeeder::class);
+        $this->call(RenJakwasSeeder::class);
+        $this->call(RenPkptSeeder::class);
+        $this->call(RenPkauSeeder::class);
     }
 }

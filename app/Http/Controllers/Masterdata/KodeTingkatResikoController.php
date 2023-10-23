@@ -99,7 +99,7 @@ class KodeTingkatResikoController extends Controller
     {
         $auth = Auth::user();
         if ($auth->peran != 'admin') {
-            $response = Helper::labelMessageForbidden('mengubah Kode Kode Tingkat Resiko');
+            $response = Helper::labelMessageForbidden('mengubah Kode Tingkat Resiko');
             return response()->json($response, 403);
         } else {
             $data = KodeTingkatResiko::where('kode_tingkat_resiko', '=', $id)
@@ -111,7 +111,7 @@ class KodeTingkatResikoController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Ubah Kode Tingkat Resiko';
-            $activity = $auth->name . ' mengubah Kode Tingkat Resiko. Kode Kode Tingkat Resiko : ' . $key;
+            $activity = $auth->name . ' mengubah Kode Tingkat Resiko. Kode Tingkat Resiko : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
@@ -136,12 +136,12 @@ class KodeTingkatResikoController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Hapus Kode Tingkat Resiko';
-            $activity = $auth->name . ' menghapus Kode Tingkat Resiko. Kode Kode Tingkat Resiko : ' . $key;
+            $activity = $auth->name . ' menghapus Kode Tingkat Resiko. Kode Tingkat Resiko : ' . $key;
             $method = 'DELETE';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menghapus Kode Tingkat Resiko. Kode Kode Tingkat Resiko : ' . $key);
+            $response = Helper::labelMessageSuccess('menghapus Kode Tingkat Resiko. Kode Tingkat Resiko : ' . $key);
             return response()->json($response, 200);
         }
     }

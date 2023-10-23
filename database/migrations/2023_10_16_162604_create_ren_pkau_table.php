@@ -15,17 +15,17 @@ return new class extends Migration
             $table->id('id_pkau');
             $table->bigInteger('id_jakwas')->index()->nullable();
 
-            $table->char('kode_sub_unit_audit', 6)->index();
+            $table->char('kode_sub_unit_audit', 6)->index()->nullable();
             $table->string('nama_sub_unit_audit')->nullable();
-            $table->char('kode_unit_audit', 4)->index();
+            $table->char('kode_unit_audit', 4)->index()->nullable();
             $table->string('nama_unit_audit')->nullable();
-            $table->char('kode_lingkup_audit', 4)->index();
+            $table->char('kode_lingkup_audit', 4)->index()->nullable();
             $table->string('nama_lingkup_audit')->nullable();
-            $table->char('kode_area_pengawasan', 2)->index();
+            $table->char('kode_area_pengawasan', 2)->index()->nullable();
             $table->string('nama_area_pengawasan')->nullable();
-            $table->char('kode_jenis_pengawasan', 2)->index();
+            $table->char('kode_jenis_pengawasan', 2)->index()->nullable();
             $table->string('nama_jenis_pengawasan')->nullable();
-            $table->char('kode_tingkat_resiko', 2)->index();
+            $table->char('kode_tingkat_resiko', 2)->index()->nullable();
             $table->string('nama_tingkat_resiko')->nullable();
             $table->char('kode_bidang_obrik', 9)->index()->nullable();
             $table->string('nama_bidang_obrik')->nullable();
