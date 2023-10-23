@@ -95,6 +95,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $email)->first();
+        // return response()->json($user->id, 200);
 
         if (!$user) {
             return response()->json(['message' => 'User tidak ditemukan'], 404);

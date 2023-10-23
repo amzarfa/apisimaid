@@ -12,9 +12,16 @@ class Helper
     public static function createLogActivity($key, $page, $activity, $method)
     {
         $auth = Auth::user();
+        if (!$auth) {
+            $id = $key;
+            $name = $activity;
+        } else {
+            $id = $auth->id;
+            $name = $auth->name;
+        }
         LogActivity::create([
-            'idt_user' => $auth->id,
-            'name' => $auth->name,
+            'idt_user' => $id,
+            'name' => $name,
             'page' => $page,
             'activity' => $activity,
             'method' => $method,
