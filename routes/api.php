@@ -50,6 +50,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('jenispengawasan', 'Masterdata\KodeJenisPengawasanController');
         Route::resource('areapengawasan', 'Masterdata\KodeAreaPengawasanController');
         Route::resource('tingkatresiko', 'Masterdata\KodeTingkatResikoController');
+        Route::resource('datapegawai', 'Masterdata\DataPegawaiController');
 
         Route::resource('ren/jakwas', 'Ren\JakwasController');
         Route::resource('ren/pkpt', 'Ren\PkptController');
