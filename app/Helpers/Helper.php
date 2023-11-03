@@ -85,4 +85,67 @@ class Helper
         );
         return $response;
     }
+
+    public static function getNamaSubUnitAudit($kodeSubUnitAudit)
+    {
+        $data = DB::table('tr_kode_sub_unit_audit')
+            ->where('kode_sub_unit_audit', $kodeSubUnitAudit)
+            ->select('nama_sub_unit_audit')
+            ->first();
+        return $data->nama_sub_unit_audit;
+    }
+
+    public static function getNamaUnitAudit($kodeUnitAudit)
+    {
+        $data = DB::table('tr_kode_unit_audit')
+            ->where('kode_unit_audit', $kodeUnitAudit)
+            ->select('nama_unit_audit')
+            ->first();
+        return $data->nama_unit_audit;
+    }
+
+    public static function getNamaLingkupAudit($kodeLingkupAudit)
+    {
+        $data = DB::table('tr_kode_lingkup_audit')
+            ->where('kode_lingkup_audit', $kodeLingkupAudit)
+            ->select('nama_lingkup_audit')
+            ->first();
+        return $data->nama_lingkup_audit;
+    }
+
+    public static function getNamaAreaPengawasan($kodeAreaPengawasan)
+    {
+        $data = DB::table('tr_kode_area_pengawasan')
+            ->where('kode_area_pengawasan', $kodeAreaPengawasan)
+            ->select('nama_area_pengawasan')
+            ->first();
+        return $data->nama_area_pengawasan;
+    }
+
+    public static function getNamaJenisPengawasan($kodeJenisPengawasan)
+    {
+        $data = DB::table('tr_kode_jenis_pengawasan')
+            ->where('kode_jenis_pengawasan', $kodeJenisPengawasan)
+            ->select('nama_jenis_pengawasan')
+            ->first();
+        return $data->nama_jenis_pengawasan;
+    }
+
+    public static function getNamaTingkatResiko($kodeTingkatResiko)
+    {
+        $data = DB::table('tr_kode_tingkat_resiko')
+            ->where('kode_tingkat_resiko', $kodeTingkatResiko)
+            ->select('nama_tingkat_resiko')
+            ->first();
+        return $data->nama_tingkat_resiko;
+    }
+
+    public static function getNamaBidangObrik($kodeBidangObrik)
+    {
+        $data = DB::table('tr_kode_bidang_obrik')
+            ->where('kode_bidang_obrik', $kodeBidangObrik)
+            ->select('nama_bidang_obrik')
+            ->first();
+        return $data->nama_bidang_obrik;
+    }
 }

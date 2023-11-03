@@ -215,4 +215,65 @@ class DataPegawaiController extends Controller
             return response()->json($response, 200);
         }
     }
+
+    // List Pegawai Inactive
+    public function pegawaiInactive()
+    {
+        $auth = Auth::user();
+        $data = DataPegawai::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'tr_data_pegawai.kode_unit_audit')
+            ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'tr_data_pegawai.kode_sub_unit_audit')
+            ->select(
+                'tr_data_pegawai.id',
+                'tr_data_pegawai.kode_sub_unit_audit as kodeSubUnitAudit',
+                'sub_unit_audit.nama_sub_unit_audit as namaSubUnitAudit',
+                'tr_data_pegawai.kode_unit_audit as kodeUnitAudit',
+                'unit_audit.nama_unit_audit as namaUnitAudit',
+                'nip',
+                'nip_lama as nipLama',
+                'nama',
+                'nama_dan_gelar as namaDanGelar',
+                'email',
+                'tempat_lahir as tempatLahir',
+                'tgl_lahir as tanggalLahir',
+                'jenis_kelamin as jenisKelamin',
+                'golongan_ruang as golonganRuang',
+                'nama_pangkat as namaPangkat',
+                'jabatan',
+                'status',
+            )
+            ->where('tr_data_pegawai.is_del', '=', 1)
+            ->where('tr_data_pegawai.status', '=', 'inactive')
+            ->where('tr_data_pegawai.kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->orderBy('tr_data_pegawai.id', 'Desc')
+            ->get();
+        $response = Helper::labelMessageSuccessWithCountData($data);
+        return response()->json($response, 200);
+    }
+
+    // Activate Pegawai
+    public function activatePegawai(string $id)
+    {
+        $auth = Auth::user();
+        if ($auth->peran != 'admin') {
+            $response = Helper::labelMessageForbidden('mengaktivasi Data Pegawai');
+            return response()->json($response, 403);
+        } else {
+            $data = DataPegawai::where('id', '=', $id)->update([
+                'status' => 'active',
+                'is_del' => '0',
+                'updated_by' => $auth->name,
+            ]);
+
+            // Log Activity
+            $key = $id;
+            $page = 'Aktifkan kembali Data Pegawai';
+            $activity = $auth->name . ' mengaktivasi Data Pegawai. Data Pegawai : ' . $key;
+            $method = 'PATCH';
+            Helper::createLogActivity($key, $page, $activity, $method);
+
+            // Response
+            $response = Helper::labelMessageSuccess('mengaktivasi Data Pegawai. Data Pegawai : ' . $key);
+            return response()->json($response, 200);
+        }
+    }
 }

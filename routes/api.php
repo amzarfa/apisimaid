@@ -51,9 +51,22 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('areapengawasan', 'Masterdata\KodeAreaPengawasanController');
         Route::resource('tingkatresiko', 'Masterdata\KodeTingkatResikoController');
         Route::resource('datapegawai', 'Masterdata\DataPegawaiController');
+        Route::get('datapegawaiinactive', 'Masterdata\DataPegawaiController@pegawaiInactive');
+        Route::patch('activatepegawai/{id}', 'Masterdata\DataPegawaiController@activatePegawai');
 
+        // Jakwas
         Route::resource('ren/jakwas', 'Ren\JakwasController');
+        Route::get('ren/datajakwasinactive', 'Ren\JakwasController@jakwasInactive');
+        Route::patch('ren/activatejakwas/{id}', 'Ren\JakwasController@activateJakwas');
+
+        // PKPT
         Route::resource('ren/pkpt', 'Ren\PkptController');
+        Route::get('ren/datapkptinactive', 'Ren\PkptController@pkptInactive');
+        Route::patch('ren/activatepkpt/{id}', 'Ren\PkptController@activatePkpt');
+
+        // PKAU
         Route::resource('ren/pkau', 'Ren\PkauController');
+        Route::get('ren/datapkauinactive', 'Ren\PkauController@pkauInactive');
+        Route::patch('ren/activatepkau/{id}', 'Ren\PkauController@activatePkau');
     });
 });

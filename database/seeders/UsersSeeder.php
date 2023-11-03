@@ -20,8 +20,8 @@ class UsersSeeder extends Seeder
                 'nip' => '199209162020121007',
                 'email' => 'amzarfa7@gmail.com',
                 'password' => Hash::make('password'),
-                'kode_unit_audit' => '3198',
-                'kode_sub_unit_audit' => '319801',
+                'kode_unit_audit' => '1605',
+                'kode_sub_unit_audit' => '160500',
                 'peran' => 'admin',
             ],
             [
@@ -29,8 +29,8 @@ class UsersSeeder extends Seeder
                 'nip' => '199801012020121003',
                 'email' => 'mediamergugun2@gmail.com',
                 'password' => Hash::make('password'),
-                'kode_unit_audit' => '3198',
-                'kode_sub_unit_audit' => '319801',
+                'kode_unit_audit' => '1605',
+                'kode_sub_unit_audit' => '160500',
                 'peran' => 'admin',
             ],
         ];

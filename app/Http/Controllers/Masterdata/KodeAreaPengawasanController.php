@@ -99,7 +99,7 @@ class KodeAreaPengawasanController extends Controller
     {
         $auth = Auth::user();
         if ($auth->peran != 'admin') {
-            $response = Helper::labelMessageForbidden('mengubah Kode Kode Area Pengawasan');
+            $response = Helper::labelMessageForbidden('mengubah Kode Area Pengawasan');
             return response()->json($response, 403);
         } else {
             $data = KodeAreaPengawasan::where('kode_area_pengawasan', '=', $id)
@@ -111,7 +111,7 @@ class KodeAreaPengawasanController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Ubah Kode Area Pengawasan';
-            $activity = $auth->name . ' mengubah Kode Area Pengawasan. Kode Kode Area Pengawasan : ' . $key;
+            $activity = $auth->name . ' mengubah Kode Area Pengawasan. Kode Area Pengawasan : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
@@ -136,12 +136,12 @@ class KodeAreaPengawasanController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Hapus Kode Area Pengawasan';
-            $activity = $auth->name . ' menghapus Kode Area Pengawasan. Kode Kode Area Pengawasan : ' . $key;
+            $activity = $auth->name . ' menghapus Kode Area Pengawasan. Kode Area Pengawasan : ' . $key;
             $method = 'DELETE';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menghapus Kode Area Pengawasan. Kode Kode Area Pengawasan : ' . $key);
+            $response = Helper::labelMessageSuccess('menghapus Kode Area Pengawasan. Kode Area Pengawasan : ' . $key);
             return response()->json($response, 200);
         }
     }
