@@ -86,6 +86,16 @@ class Helper
         return $response;
     }
 
+    public static function labelMessageFailed($label)
+    {
+        $response = array(
+            'status' => false,
+            'statusCode' => 206,
+            'message' => $label,
+        );
+        return $response;
+    }
+
     public static function getNamaSubUnitAudit($kodeSubUnitAudit)
     {
         $data = DB::table('tr_kode_sub_unit_audit')
@@ -171,5 +181,35 @@ class Helper
             'links' => $response['links'],
         );
         return $data;
+    }
+
+    public static function uploadLogoUnitAudit($dataUpload, $kodeUnitAudit)
+    {
+        $auth = Auth::user();
+        $fileSize = $dataUpload->getSize();
+        $fileSize = number_format($fileSize / 1048576, 2);
+        if ($fileSize > 10) {
+            $response = Helper::labelMessageFailed('Data terlalu besar! Maksimal 10 MB');
+            return $response;
+        }
+        $filename = time() . '.' . $dataUpload->getClientOriginalExtension();
+        $path = $dataUpload->storeAs($kodeUnitAudit . '/logo', $filename, 'public');
+        $filepath = 'storage/' . $path;
+
+        // Log Activity
+        $key = $kodeUnitAudit;
+        $page = 'Upload Logo Unit Audit';
+        $activity = $auth->name . ' mengupload Logo Unit Audit. Kode Unit Audit : ' . $kodeUnitAudit . '. Path Logo : ' . $path;
+        $method = 'UPLOAD';
+        Helper::createLogActivity($key, $page, $activity, $method);
+
+        $response = array(
+            'status' => true,
+            'statusCode' => 200,
+            'message' => 'mengupload Logo Unit Audit. Kode Unit Audit : ' . $kodeUnitAudit,
+            'filePath' => $filepath,
+            'filePathWithUrl' => url($filepath),
+        );
+        return $response;
     }
 }

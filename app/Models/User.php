@@ -42,4 +42,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected $attributes = [
+        'nip' => 'nip',
+        'kode_unit_audit' => 'kode_unit_audit',
+        'kode_sub_unit_audit' => 'kode_sub_unit_audit',
+        'kode_bidang_obrik' => 'kode_bidang_obrik',
+        'peran' => 'peran',
+    ];
 }

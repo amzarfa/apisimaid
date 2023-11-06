@@ -30,6 +30,9 @@ class KodeUnitAuditController extends Controller
             'nama_unit_audit as namaUnitAudit',
             'jenis',
             'jenis_unit_audit as jenisUnitAudit',
+            'logo',
+            'alamat',
+            'phone',
         )->where('is_del', '=', 0)->get();
         $response = Helper::labelMessageSuccessWithCountData($data);
         return response()->json($response, 200);
@@ -59,6 +62,9 @@ class KodeUnitAuditController extends Controller
             $storeData->nama_unit_audit = $request->namaUnitAudit;
             $storeData->jenis = $request->jenis;
             $storeData->jenis_unit_audit = $request->jenisUnitAudit;
+            $storeData->logo = $request->logo;
+            $storeData->alamat = $request->alamat;
+            $storeData->phone = $request->phone;
             $storeData->created_by = $auth->name;
             $storeData->save();
 
@@ -83,8 +89,11 @@ class KodeUnitAuditController extends Controller
         $data = KodeUnitAudit::select(
             'kode_unit_audit as kodeUnitAudit',
             'nama_unit_audit as namaUnitAudit',
-            'jenis as jenis',
+            'jenis',
             'jenis_unit_audit as jenisUnitAudit',
+            'logo',
+            'alamat',
+            'phone',
         )->where('kode_unit_audit', '=', $id)->first();
         $response = Helper::labelMessageSuccessWithData($data);
         return response()->json($response, 200);
@@ -110,10 +119,13 @@ class KodeUnitAuditController extends Controller
         } else {
             $data = KodeUnitAudit::where('kode_unit_audit', '=', $id)
                 ->update([
-                    'kode_unit_audit' => $request->kodeUnitAudit,
+                    // 'kode_unit_audit' => $request->kodeUnitAudit,
                     'nama_unit_audit' => $request->namaUnitAudit,
-                    'jenis' => $auth->jenis,
-                    'jenis_unit_audit' => $auth->jenisUnitAudit,
+                    'jenis' => $request->jenis,
+                    'jenis_unit_audit' => $request->jenisUnitAudit,
+                    'logo' => $request->logo,
+                    'alamat' => $request->alamat,
+                    'phone' => $request->phone,
                     'updated_by' => $auth->name,
                 ]);
 
@@ -125,7 +137,7 @@ class KodeUnitAuditController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengubah Unit Audit: ' . $key);
+            $response = Helper::labelMessageSuccess('mengubah Unit Audit. Kode Unit Audit : ' . $key);
             return response()->json($response, 200);
         }
     }
@@ -153,5 +165,17 @@ class KodeUnitAuditController extends Controller
             $response = Helper::labelMessageSuccess('menghapus Unit Audit. Kode Unit Audit : ' . $key);
             return response()->json($response, 200);
         }
+    }
+
+    // Upload Logo Unit Audit
+    public function uploadLogo(Request $request)
+    {
+        $dataUpload = $request->file('fileLogo');
+        $kodeUnitAudit = $request->kodeUnitAudit;
+        $response = Helper::uploadLogoUnitAudit($dataUpload, $kodeUnitAudit);
+        if ($response != 'true') {
+            return response()->json($response, 206);
+        }
+        return response()->json($response, 200);
     }
 }

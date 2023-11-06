@@ -18,6 +18,7 @@ class ProfileController extends Controller
         $data = User::where('users.id', '=', $auth->id)
             ->leftjoin('tr_kode_unit_audit as unitaudit', 'unitaudit.kode_unit_audit', '=', 'users.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as subunitaudit', 'subunitaudit.kode_sub_unit_audit', '=', 'users.kode_sub_unit_audit')
+            ->leftjoin('tr_kode_bidang_obrik as bidangobrik', 'bidangobrik.kode_bidang_obrik', '=', 'users.kode_bidang_obrik')
             ->select(
                 'users.id',
                 'users.name',
@@ -27,6 +28,8 @@ class ProfileController extends Controller
                 'unitaudit.nama_unit_audit as namaUnitAudit',
                 'users.kode_sub_unit_audit as kodeSubUnitAudit',
                 'subunitaudit.nama_sub_unit_audit as namaSubUnitAudit',
+                'users.kode_bidang_obrik as kodeBidangObrik',
+                'bidangobrik.nama_bidang_obrik as namaBidangObrik',
                 'users.peran',
                 'users.peran_ren as peranRen',
                 'users.peran_lak as peranLak',

@@ -171,6 +171,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Vinkla\Hashids\HashidsServiceProvider::class, // Hashids
+        Barryvdh\DomPDF\ServiceProvider::class, // Export PDF
     ])->toArray(),
 
     /*
@@ -188,6 +189,7 @@ return [
         // 'Example' => App\Facades\Example::class,
 
         'Hashids' => Vinkla\Hashids\Facades\Hashids::class, // Hashids
+        'PDF' => Barryvdh\DomPDF\Facade::class, // Export PDF
     ])->toArray(),
 
 ];

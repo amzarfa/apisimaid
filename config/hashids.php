@@ -30,7 +30,7 @@ return [
 
         'main' => [
             'salt' => '4S!m4!d',
-            'length' => 8,
+            'length' => 10,
             'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 

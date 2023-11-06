@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('peran_por', 20)->nullable();
             $table->string('peran_simhpnas', 20)->nullable();
             $table->rememberToken()->nullable();
-            $table->string('status', 20)->nullable()->default('Active');
+            $table->string('status', 20)->nullable()->default('active');
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));
             $table->string('created_by')->nullable()->default('SYSTEM');
