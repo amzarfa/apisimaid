@@ -22,34 +22,43 @@ class JakwasController extends Controller
         $this->middleware('auth:api');
     }
 
+    // Select Array
+    public function selectJakwas()
+    {
+        $querySelect = array(
+            'ren_jakwas.id_jakwas as idJakwas',
+            'ren_jakwas.kode_sub_unit_audit as kodeSubUnitAudit',
+            'sub_unit_audit.nama_sub_unit_audit as namaSubUnitAudit',
+            'ren_jakwas.kode_unit_audit as kodeUnitAudit',
+            'unit_audit.nama_unit_audit as namaUnitAudit',
+            'tahun',
+            'nama_jakwas as namaJakwas',
+            'deskripsi',
+        );
+        return $querySelect;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $auth = Auth::user();
         $data = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
-            ->select(
-                'ren_jakwas.id_jakwas as idJakwas',
-                'ren_jakwas.kode_sub_unit_audit as kodeSubUnitAudit',
-                'sub_unit_audit.nama_sub_unit_audit as namaSubUnitAudit',
-                'ren_jakwas.kode_unit_audit as kodeUnitAudit',
-                'unit_audit.nama_unit_audit as namaUnitAudit',
-                'tahun',
-                'nama_jakwas as namaJakwas',
-                'deskripsi',
-            )
             ->where('ren_jakwas.is_del', '=', 0)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('ren_jakwas.tahun', '=', $request->tahunJakwas ? $request->tahunJakwas : date('Y'))
+            ->select($this->selectJakwas())
             ->orderBy('ren_jakwas.id_jakwas', 'Desc')
-            ->get()
-            ->map(function ($data) {
-                $data->idJakwas = Hashids::encode($data->idJakwas);
-                return $data;
-            });
-        $response = Helper::labelMessageSuccessWithCountData($data);
-        return response()->json($response, 200);
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
     }
 
     /**
@@ -195,30 +204,24 @@ class JakwasController extends Controller
     }
 
     // List Jakwas Inactive
-    public function jakwasInactive()
+    public function jakwasInactive(Request $request)
     {
         $auth = Auth::user();
         $data = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
-            ->select(
-                'ren_jakwas.id_jakwas as idJakwas',
-                'ren_jakwas.kode_sub_unit_audit as kodeSubUnitAudit',
-                'sub_unit_audit.nama_sub_unit_audit as namaSubUnitAudit',
-                'ren_jakwas.kode_unit_audit as kodeUnitAudit',
-                'unit_audit.nama_unit_audit as namaUnitAudit',
-                'tahun',
-                'nama_jakwas as namaJakwas',
-                'deskripsi',
-            )
             ->where('ren_jakwas.is_del', '=', 1)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('ren_jakwas.tahun', '=', $request->tahunJakwas ? $request->tahunJakwas : date('Y'))
+            ->select($this->selectJakwas())
             ->orderBy('ren_jakwas.id_jakwas', 'Desc')
-            ->get()->map(function ($data) {
-                $data->idJakwas = Hashids::encode($data->idJakwas);
-                return $data;
-            });
-        $response = Helper::labelMessageSuccessWithCountData($data);
-        return response()->json($response, 200);
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
     }
 
     // Activate Jakwas
