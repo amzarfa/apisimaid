@@ -98,6 +98,9 @@ class Helper
 
     public static function getNamaSubUnitAudit($kodeSubUnitAudit)
     {
+        if ($kodeSubUnitAudit === null) {
+            return null;
+        }
         $data = DB::table('tr_kode_sub_unit_audit')
             ->where('kode_sub_unit_audit', $kodeSubUnitAudit)
             ->select('nama_sub_unit_audit')
@@ -107,6 +110,9 @@ class Helper
 
     public static function getNamaUnitAudit($kodeUnitAudit)
     {
+        if ($kodeUnitAudit === null) {
+            return null;
+        }
         $data = DB::table('tr_kode_unit_audit')
             ->where('kode_unit_audit', $kodeUnitAudit)
             ->select('nama_unit_audit')
@@ -152,6 +158,9 @@ class Helper
 
     public static function getNamaBidangObrik($kodeBidangObrik)
     {
+        if ($kodeBidangObrik === null) {
+            return null;
+        }
         $data = DB::table('tr_kode_bidang_obrik')
             ->where('kode_bidang_obrik', $kodeBidangObrik)
             ->select('nama_bidang_obrik')

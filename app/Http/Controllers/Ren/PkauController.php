@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
 use App\Models\Ren\Pkau;
-use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Http\Resources\PkauResource;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\Ren\PkauExport;
 
 class PkauController extends Controller
 {
@@ -43,7 +43,6 @@ class PkauController extends Controller
             'nama_tingkat_resiko as namaTingkatResiko',
             'kode_bidang_obrik as kodeBidangObrik',
             'nama_bidang_obrik as namaBidangObrik',
-
             'nama_pkau as namaPkau',
             'deskripsi_pkau as deskripsiPkau',
             'tahun_pkau as tahunPkau',
@@ -58,11 +57,10 @@ class PkauController extends Controller
             'jumlah_lhp_terbit as jumlahLhpTerbit',
             'kebutuhan_sarpras as  kebutuhanSarpras',
             'keterangan',
-
             'created_at as createdAt',
             'updated_at as updatedAt',
             'created_by as createdBy',
-            'updated_by as updatedBy',
+            'updated_by as updatedBy'
         );
         return $querySelect;
     }
@@ -111,6 +109,7 @@ class PkauController extends Controller
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
+        $idJakwas = Hashids::decode($request->idJakwas)[0];
 
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menambah Data Pkau');
@@ -118,7 +117,7 @@ class PkauController extends Controller
         } else {
             // Store
             $storeData = new Pkau();
-            $storeData->id_jakwas = $request->idJakwas;
+            $storeData->id_jakwas = $idJakwas;
             $storeData->kode_sub_unit_audit = $request->kodeSubUnitAudit;
             $storeData->nama_sub_unit_audit = $namaSubUnitAudit;
             $storeData->kode_unit_audit = $request->kodeUnitAudit;
@@ -202,6 +201,7 @@ class PkauController extends Controller
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
+        $idJakwas = Hashids::decode($request->idJakwas)[0];
 
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengubah Data Pkau');
@@ -209,7 +209,7 @@ class PkauController extends Controller
         } else {
             $data = Pkau::where('id_pkau', '=', $id)
                 ->update([
-                    'id_jakwas' => $request->idJakwas,
+                    'id_jakwas' => $idJakwas,
                     'kode_sub_unit_audit' => $request->kodeSubUnitAudit,
                     'nama_sub_unit_audit' => $namaSubUnitAudit,
                     'kode_unit_audit' => $request->kodeUnitAudit,
@@ -354,5 +354,25 @@ class PkauController extends Controller
         $response = $data->toArray();
         $customResponse = Helper::paginateCustomResponse($response);
         return response()->json($customResponse, 200);
+    }
+
+    // Export
+    public function downloadPkau(Request $request)
+    {
+        $auth = Auth::user();
+        $data = Pkau::where('is_del', '=', 0)
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun_pkau', '=', $request->tahunPkau ? $request->tahunPkau : date('Y'))
+            ->select($this->selectPkau())
+            ->orderBy('id_pkau', 'Desc')
+            ->get();
+        $data->transform(function ($data) {
+            $data->idPkau = Hashids::encode($data->idPkau);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            return $data;
+        });
+        $response = $data;
+        return Excel::download(new PkauExport($response), 'PKAU Export ' . $auth->kode_unit_audit . '.xlsx');
     }
 }

@@ -10,6 +10,8 @@ use App\Models\Ren\Pkpt;
 use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Resources\PkptResource;
+use App\Exports\Ren\PkptExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PkptController extends Controller
 {
@@ -43,7 +45,6 @@ class PkptController extends Controller
             'nama_tingkat_resiko as namaTingkatResiko',
             'kode_bidang_obrik as kodeBidangObrik',
             'nama_bidang_obrik as namaBidangObrik',
-
             'nama_pkpt as namaPkpt',
             'deskripsi_pkpt as deskripsiPkpt',
             'tahun_pkpt as tahunPkpt',
@@ -56,9 +57,8 @@ class PkptController extends Controller
             'jumlah_hari_pengawasan as jumlahHariPengawasan',
             'anggaran_biaya as anggaranBiaya',
             'jumlah_lhp_terbit as jumlahLhpTerbit',
-            'kebutuhan_sarpras as  kebutuhanSarpras',
+            'kebutuhan_sarpras as kebutuhanSarpras',
             'keterangan',
-
             'created_at as createdAt',
             'updated_at as updatedAt',
             'created_by as createdBy',
@@ -111,6 +111,7 @@ class PkptController extends Controller
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
+        $idJakwas = Hashids::decode($request->idJakwas)[0];
 
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menambah Data Pkpt');
@@ -118,7 +119,7 @@ class PkptController extends Controller
         } else {
             // Store
             $storeData = new Pkpt();
-            $storeData->id_jakwas = $request->idJakwas;
+            $storeData->id_jakwas = $idJakwas;
             $storeData->kode_sub_unit_audit = $request->kodeSubUnitAudit;
             $storeData->nama_sub_unit_audit = $namaSubUnitAudit;
             $storeData->kode_unit_audit = $request->kodeUnitAudit;
@@ -202,6 +203,7 @@ class PkptController extends Controller
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
+        $idJakwas = Hashids::decode($request->idJakwas)[0];
 
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengubah Data Pkpt');
@@ -209,7 +211,7 @@ class PkptController extends Controller
         } else {
             $data = Pkpt::where('id_pkpt', '=', $id)
                 ->update([
-                    'id_jakwas' => $request->idJakwas,
+                    'id_jakwas' => $idJakwas,
                     'kode_sub_unit_audit' => $request->kodeSubUnitAudit,
                     'nama_sub_unit_audit' => $namaSubUnitAudit,
                     'kode_unit_audit' => $request->kodeUnitAudit,
@@ -354,5 +356,25 @@ class PkptController extends Controller
         $response = $data->toArray();
         $customResponse = Helper::paginateCustomResponse($response);
         return response()->json($customResponse, 200);
+    }
+
+    // Export
+    public function downloadPkpt(Request $request)
+    {
+        $auth = Auth::user();
+        $data = Pkpt::where('is_del', '=', 0)
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun_pkpt', '=', $request->tahunPkpt ? $request->tahunPkpt : date('Y'))
+            ->select($this->selectPkpt())
+            ->orderBy('id_pkpt', 'Desc')
+            ->get();
+        $data->transform(function ($data) {
+            $data->idPkpt = Hashids::encode($data->idPkpt);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            return $data;
+        });
+        $response = $data;
+        return Excel::download(new PkptExport($response), 'PKPT Export ' . $auth->kode_unit_audit . '.xlsx');
     }
 }

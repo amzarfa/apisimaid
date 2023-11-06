@@ -84,6 +84,9 @@ class UserManagementController extends Controller
     public function store(Request $request)
     {
         $auth = Auth::user();
+        $namaUnitAudit = Helper::getNamaUnitAudit($request->kodeUnitAudit);
+        $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
+        $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menambah User');
             return response()->json($response, 403);
@@ -104,6 +107,9 @@ class UserManagementController extends Controller
             $storeData->kode_unit_audit = $request->kodeUnitAudit;
             $storeData->kode_sub_unit_audit = $request->kodeSubUnitAudit;
             $storeData->kode_bidang_obrik = $request->kodeBidangObrik;
+            $storeData->nama_unit_audit = $namaUnitAudit;
+            $storeData->nama_sub_unit_audit = $namaSubUnitAudit;
+            $storeData->nama_bidang_obrik = $namaBidangObrik;
             $storeData->peran = $request->peran;
             $storeData->peran_ren = $request->peranRen;
             $storeData->peran_lak = $request->peranLak;
@@ -161,6 +167,9 @@ class UserManagementController extends Controller
     {
         $auth = Auth::user();
         $id = Hashids::decode($id)[0];
+        $namaUnitAudit = Helper::getNamaUnitAudit($request->kodeUnitAudit);
+        $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
+        $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengubah User Pengguna');
             return response()->json($response, 403);
@@ -173,6 +182,9 @@ class UserManagementController extends Controller
                     'kode_unit_audit' => $request->kodeUnitAudit,
                     'kode_sub_unit_audit' => $request->kodeSubUnitAudit,
                     'kode_bidang_obrik' => $request->kodeBidangObrik,
+                    'nama_unit_audit' => $namaUnitAudit,
+                    'nama_sub_unit_audit' => $namaSubUnitAudit,
+                    'nama_bidang_obrik' => $namaBidangObrik,
                     'peran' => $request->peran,
                     'peran_ren' => $request->peranRen,
                     'peran_lak' => $request->peranLak,

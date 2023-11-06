@@ -19,8 +19,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('kode_unit_audit', 4)->index()->nullable();
+            $table->string('nama_unit_audit')->nullable();
             $table->string('kode_sub_unit_audit', 6)->index()->nullable();
+            $table->string('nama_sub_unit_audit')->nullable();
             $table->string('kode_bidang_obrik', 9)->index()->nullable();
+            $table->string('nama_bidang_obrik')->nullable();
             $table->string('peran', 20)->nullable()->default('user');
             $table->string('peran_ren', 20)->nullable();
             $table->string('peran_lak', 20)->nullable();
