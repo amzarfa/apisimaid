@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
 use App\Models\Ren\Jakwas;
 use Illuminate\Support\Facades\DB;
+use Vinkla\Hashids\Facades\Hashids;
 
 class JakwasController extends Controller
 {
@@ -42,7 +43,11 @@ class JakwasController extends Controller
             ->where('ren_jakwas.is_del', '=', 0)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
             ->orderBy('ren_jakwas.id_jakwas', 'Desc')
-            ->get();
+            ->get()
+            ->map(function ($data) {
+                $data->idJakwas = Hashids::encode($data->idJakwas);
+                return $data;
+            });
         $response = Helper::labelMessageSuccessWithCountData($data);
         return response()->json($response, 200);
     }
@@ -85,7 +90,8 @@ class JakwasController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menambah Data Jakwas. Id Data Jakwas : ' . $key);
+            $id = Hashids::encode($storeData->id);
+            $response = Helper::labelMessageSuccess('menambah Data Jakwas. Id Data Jakwas : ' . $id);
             return response()->json($response, 200);
         }
     }
@@ -95,6 +101,7 @@ class JakwasController extends Controller
      */
     public function show(string $id)
     {
+        $id = Hashids::decode($id)[0];
         $data = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
             ->select(
@@ -107,7 +114,9 @@ class JakwasController extends Controller
                 'nama_jakwas as namaJakwas',
                 'deskripsi',
             )
-            ->where('ren_jakwas.id_jakwas', '=', $id)->first();
+            ->where('ren_jakwas.id_jakwas', '=', $id)
+            ->first();
+        $data->idJakwas = Hashids::encode($data->idJakwas);
         $response = Helper::labelMessageSuccessWithData($data);
         return response()->json($response, 200);
     }
@@ -126,6 +135,8 @@ class JakwasController extends Controller
     public function update(Request $request, string $id)
     {
         $auth = Auth::user();
+        $id = Hashids::decode($id)[0];
+        // return response()->json($id, 200);
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengubah Data Jakwas');
             return response()->json($response, 403);
@@ -146,7 +157,8 @@ class JakwasController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengubah Data Jakwas: ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('mengubah Data Jakwas: ' . $id);
             return response()->json($response, 200);
         }
     }
@@ -157,6 +169,7 @@ class JakwasController extends Controller
     public function destroy(string $id)
     {
         $auth = Auth::user();
+        $id = Hashids::decode($id)[0];
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menghapus Data Jakwas');
             return response()->json($response, 403);
@@ -175,7 +188,8 @@ class JakwasController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menghapus Data Jakwas. Kode Jakwas : ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('menghapus Data Jakwas. Kode Jakwas : ' . $id);
             return response()->json($response, 200);
         }
     }
@@ -199,7 +213,10 @@ class JakwasController extends Controller
             ->where('ren_jakwas.is_del', '=', 1)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
             ->orderBy('ren_jakwas.id_jakwas', 'Desc')
-            ->get();
+            ->get()->map(function ($data) {
+                $data->idJakwas = Hashids::encode($data->idJakwas);
+                return $data;
+            });
         $response = Helper::labelMessageSuccessWithCountData($data);
         return response()->json($response, 200);
     }
@@ -208,7 +225,7 @@ class JakwasController extends Controller
     public function activateJakwas(string $id)
     {
         $auth = Auth::user();
-        // return response()->json($auth, 200);
+        $id = Hashids::decode($id)[0];
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengaktivasi Data Jakwas');
             return response()->json($response, 403);
@@ -226,7 +243,8 @@ class JakwasController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengaktivasi Data Jakwas. Data Jakwas : ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('mengaktivasi Data Jakwas. Data Jakwas : ' . $id);
             return response()->json($response, 200);
         }
     }

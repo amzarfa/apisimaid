@@ -42,14 +42,14 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('jenisobrik', 'Masterdata\KodeJenisObrikController');
         Route::resource('gruplingkupaudit', 'Masterdata\KodeGrupLingkupAuditController');
         Route::resource('kodelingkupaudit', 'Masterdata\KodeLingkupAuditController');
-
         Route::resource('unitobrik', 'Masterdata\KodeUnitObrikController');
         Route::resource('bidangobrik', 'Masterdata\KodeBidangObrikController');
         Route::resource('subbidangobrik', 'Masterdata\KodeSubBidangObrikController');
-
         Route::resource('jenispengawasan', 'Masterdata\KodeJenisPengawasanController');
         Route::resource('areapengawasan', 'Masterdata\KodeAreaPengawasanController');
         Route::resource('tingkatresiko', 'Masterdata\KodeTingkatResikoController');
+
+        // Data Pegawai
         Route::resource('datapegawai', 'Masterdata\DataPegawaiController');
         Route::get('datapegawaiinactive', 'Masterdata\DataPegawaiController@pegawaiInactive');
         Route::patch('activatepegawai/{id}', 'Masterdata\DataPegawaiController@activatePegawai');

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
 use App\Models\Ren\Pkpt;
 use Illuminate\Support\Facades\DB;
+use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Resources\PkptResource;
 
 class PkptController extends Controller
 {
@@ -68,16 +70,24 @@ class PkptController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 0)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun_pkpt', '=', $request->tahunPkpt ? $request->tahunPkpt : date('Y'))
             ->select($this->selectPkpt())
             ->orderBy('id_pkpt', 'Desc')
-            ->get();
-        $response = Helper::labelMessageSuccessWithCountData($data);
-        return response()->json($response, 200);
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idPkpt = Hashids::encode($data->idPkpt);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
     }
 
     /**
@@ -150,7 +160,8 @@ class PkptController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menambah Data Pkpt. Id Pkpt : ' . $key);
+            $id = Hashids::encode($storeData->id);
+            $response = Helper::labelMessageSuccess('menambah Data Pkpt. Id Pkpt : ' . $id);
             return response()->json($response, 200);
         }
     }
@@ -160,8 +171,11 @@ class PkptController extends Controller
      */
     public function show(string $id)
     {
+        $id = Hashids::decode($id)[0];
         $data = Pkpt::select($this->selectPkpt())
             ->where('id_pkpt', '=', $id)->first();
+        $data->idPkpt = Hashids::encode($data->idPkpt);
+        $data->idJakwas = Hashids::encode($data->idJakwas);
         $response = Helper::labelMessageSuccessWithData($data);
         return response()->json($response, 200);
     }
@@ -180,6 +194,7 @@ class PkptController extends Controller
     public function update(Request $request, string $id)
     {
         $auth = Auth::user();
+        $id = Hashids::decode($id)[0];
         $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
         $namaUnitAudit = Helper::getNamaUnitAudit($request->kodeUnitAudit);
         $namaLingkupAudit = Helper::getNamaLingkupAudit($request->kodeLingkupAudit);
@@ -231,12 +246,13 @@ class PkptController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Ubah Data Pkpt';
-            $activity = $auth->name . ' mengubah Data Pkpt. Data Pkpt : ' . $key;
+            $activity = $auth->name . ' mengubah Data Pkpt. Id Pkpt : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengubah Data Pkpt: ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('mengubah Data Pkpt. Id Pkpt : ' . $id);
             return response()->json($response, 200);
         }
     }
@@ -247,11 +263,11 @@ class PkptController extends Controller
     public function destroy(string $id)
     {
         $auth = Auth::user();
+        $id = Hashids::decode($id)[0];
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menghapus Data Pkpt');
             return response()->json($response, 403);
         } else {
-            // $data = Pkpt::where('id_pkpt', '=', $id)->delete();
             $data = Pkpt::where('id_pkpt', '=', $id)->update([
                 'is_del' => '1',
                 'updated_by' => $auth->name,
@@ -265,29 +281,37 @@ class PkptController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menghapus Data Pkpt. Id Pkpt : ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('menghapus Data Pkpt. Id Pkpt : ' . $id);
             return response()->json($response, 200);
         }
     }
 
     // List Pkpt Inactive
-    public function pkptInactive()
+    public function pkptInactive(Request $request)
     {
         $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 1)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun_pkpt', '=', $request->tahunPkpt ? $request->tahunPkpt : date('Y'))
             ->select($this->selectPkpt())
             ->orderBy('id_pkpt', 'Desc')
-            ->get();
-        $response = Helper::labelMessageSuccessWithCountData($data);
-        return response()->json($response, 200);
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idPkpt = Hashids::encode($data->idPkpt);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
     }
 
     // Activate Pkpt
     public function activatePkpt(string $id)
     {
         $auth = Auth::user();
-        // return response()->json($auth, 200);
+        $id = Hashids::decode($id)[0];
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengaktivasi Data Pkpt');
             return response()->json($response, 403);
@@ -299,13 +323,14 @@ class PkptController extends Controller
 
             // Log Activity
             $key = $id;
-            $page = 'Aktifkan kembali Data Pkpt';
+            $page = 'Aktivasi Data Pkpt';
             $activity = $auth->name . ' mengaktivasi Data Pkpt. Id Pkpt : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengaktivasi Data Pkpt. Id Pkpt : ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('mengaktivasi Data Pkpt. Id Pkpt : ' . $id);
             return response()->json($response, 200);
         }
     }

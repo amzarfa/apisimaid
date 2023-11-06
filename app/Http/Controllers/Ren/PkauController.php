@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
 use App\Models\Ren\Pkau;
 use Illuminate\Support\Facades\DB;
+use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Resources\PkauResource;
 
 class PkauController extends Controller
 {
@@ -68,16 +70,23 @@ class PkauController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $auth = Auth::user();
         $data = Pkau::where('is_del', '=', 0)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun_pkau', '=', $request->tahunPkau ? $request->tahunPkau : date('Y'))
             ->select($this->selectPkau())
             ->orderBy('id_pkau', 'Desc')
-            ->get();
-        $response = Helper::labelMessageSuccessWithCountData($data);
-        return response()->json($response, 200);
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idPkau = Hashids::encode($data->idPkau);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
     }
 
     /**
@@ -150,7 +159,8 @@ class PkauController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menambah Data Pkau. Id Pkau : ' . $key);
+            $id = Hashids::encode($storeData->id);
+            $response = Helper::labelMessageSuccess('menambah Data Pkau. Id Pkau : ' . $id);
             return response()->json($response, 200);
         }
     }
@@ -160,8 +170,11 @@ class PkauController extends Controller
      */
     public function show(string $id)
     {
+        $id = Hashids::decode($id)[0];
         $data = Pkau::select($this->selectPkau())
             ->where('id_pkau', '=', $id)->first();
+        $data->idPkau = Hashids::encode($data->idPkau);
+        $data->idJakwas = Hashids::encode($data->idJakwas);
         $response = Helper::labelMessageSuccessWithData($data);
         return response()->json($response, 200);
     }
@@ -180,6 +193,7 @@ class PkauController extends Controller
     public function update(Request $request, string $id)
     {
         $auth = Auth::user();
+        $id = Hashids::decode($id)[0];
         $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
         $namaUnitAudit = Helper::getNamaUnitAudit($request->kodeUnitAudit);
         $namaLingkupAudit = Helper::getNamaLingkupAudit($request->kodeLingkupAudit);
@@ -231,12 +245,13 @@ class PkauController extends Controller
             // Log Activity
             $key = $id;
             $page = 'Ubah Data Pkau';
-            $activity = $auth->name . ' mengubah Data Pkau. Data Pkau : ' . $key;
+            $activity = $auth->name . ' mengubah Data Pkau. Id Pkau : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengubah Data Pkau: ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('mengubah Data Pkau. Id Pkau : ' . $id);
             return response()->json($response, 200);
         }
     }
@@ -247,11 +262,11 @@ class PkauController extends Controller
     public function destroy(string $id)
     {
         $auth = Auth::user();
+        $id = Hashids::decode($id)[0];
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menghapus Data Pkau');
             return response()->json($response, 403);
         } else {
-            // $data = Pkau::where('id_pkau', '=', $id)->delete();
             $data = Pkau::where('id_pkau', '=', $id)->update([
                 'is_del' => '1',
                 'updated_by' => $auth->name,
@@ -265,29 +280,37 @@ class PkauController extends Controller
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('menghapus Data Pkau. Id Pkau : ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('menghapus Data Pkau. Id Pkau : ' . $id);
             return response()->json($response, 200);
         }
     }
 
     // List Pkau Inactive
-    public function pkauInactive()
+    public function pkauInactive(Request $request)
     {
         $auth = Auth::user();
         $data = Pkau::where('is_del', '=', 1)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun_pkau', '=', $request->tahunPkau ? $request->tahunPkau : date('Y'))
             ->select($this->selectPkau())
             ->orderBy('id_pkau', 'Desc')
-            ->get();
-        $response = Helper::labelMessageSuccessWithCountData($data);
-        return response()->json($response, 200);
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idPkau = Hashids::encode($data->idPkau);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
     }
 
     // Activate Pkau
     public function activatePkau(string $id)
     {
         $auth = Auth::user();
-        // return response()->json($auth, 200);
+        $id = Hashids::decode($id)[0];
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('mengaktivasi Data Pkau');
             return response()->json($response, 403);
@@ -299,13 +322,14 @@ class PkauController extends Controller
 
             // Log Activity
             $key = $id;
-            $page = 'Aktifkan kembali Data Pkau';
+            $page = 'Aktivasi Data Pkau';
             $activity = $auth->name . ' mengaktivasi Data Pkau. Id Pkau : ' . $key;
             $method = 'PATCH';
             Helper::createLogActivity($key, $page, $activity, $method);
 
             // Response
-            $response = Helper::labelMessageSuccess('mengaktivasi Data Pkau. Id Pkau : ' . $key);
+            $id = Hashids::encode($id);
+            $response = Helper::labelMessageSuccess('mengaktivasi Data Pkau. Id Pkau : ' . $id);
             return response()->json($response, 200);
         }
     }

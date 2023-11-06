@@ -148,4 +148,28 @@ class Helper
             ->first();
         return $data->nama_bidang_obrik;
     }
+
+    public static function paginateCustomResponse($response)
+    {
+        $data = array(
+            'status' => true,
+            'statusCode' => 200,
+            'message' => 'Success',
+            'count' => $response['total'],
+            'total' => $response['total'],
+            'from' => $response['from'],
+            'to' => $response['to'],
+            'currentPage' => $response['current_page'],
+            'lastPage' => $response['last_page'],
+            'path' => $response['path'],
+            'firstPageUrl' => $response['first_page_url'],
+            'lastPageUrl' => $response['last_page_url'],
+            'prevPageUrl' => $response['prev_page_url'],
+            'nextPageUrl' => $response['next_page_url'],
+            'perPage' => $response['per_page'],
+            'data' => $response['data'],
+            'links' => $response['links'],
+        );
+        return $data;
+    }
 }
