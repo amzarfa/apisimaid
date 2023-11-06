@@ -334,4 +334,25 @@ class PkptController extends Controller
             return response()->json($response, 200);
         }
     }
+
+    // Search
+    public function search(Request $request)
+    {
+        $auth = Auth::user();
+        $data = Pkpt::where('is_del', '=', 0)
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('nama_pkpt', 'like', '%' . $request->search . '%')
+            ->select($this->selectPkpt())
+            ->orderBy('id_pkpt', 'Desc')
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idPkpt = Hashids::encode($data->idPkpt);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
+    }
 }

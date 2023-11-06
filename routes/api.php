@@ -63,10 +63,12 @@ Route::group(['middleware' => ['cors']], function () {
         Route::resource('ren/pkpt', 'Ren\PkptController');
         Route::get('ren/datapkptinactive', 'Ren\PkptController@pkptInactive');
         Route::patch('ren/activatepkpt/{id}', 'Ren\PkptController@activatePkpt');
+        Route::get('ren/searchpkpt', 'Ren\PkptController@search');
 
         // PKAU
         Route::resource('ren/pkau', 'Ren\PkauController');
         Route::get('ren/datapkauinactive', 'Ren\PkauController@pkauInactive');
         Route::patch('ren/activatepkau/{id}', 'Ren\PkauController@activatePkau');
+        Route::get('ren/searchpkau', 'Ren\PkauController@search');
     });
 });

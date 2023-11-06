@@ -82,6 +82,7 @@ class PkauController extends Controller
         $data->getCollection()->transform(function ($data) {
             $data->idPkau = Hashids::encode($data->idPkau);
             $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
         $response = $data->toArray();
@@ -332,5 +333,26 @@ class PkauController extends Controller
             $response = Helper::labelMessageSuccess('mengaktivasi Data Pkau. Id Pkau : ' . $id);
             return response()->json($response, 200);
         }
+    }
+
+    // Search
+    public function search(Request $request)
+    {
+        $auth = Auth::user();
+        $data = Pkau::where('is_del', '=', 0)
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('nama_pkau', 'like', '%' . $request->search . '%')
+            ->select($this->selectPkau())
+            ->orderBy('id_pkau', 'Desc')
+            ->paginate($request->perPage ? $request->perPage : 10);
+        $data->getCollection()->transform(function ($data) {
+            $data->idPkau = Hashids::encode($data->idPkau);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            return $data;
+        });
+        $response = $data->toArray();
+        $customResponse = Helper::paginateCustomResponse($response);
+        return response()->json($customResponse, 200);
     }
 }
