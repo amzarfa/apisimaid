@@ -73,7 +73,7 @@ class PkauController extends Controller
         $auth = Auth::user();
         $data = Pkau::where('is_del', '=', 0)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('tahun_pkau', '=', $request->tahunPkau ? $request->tahunPkau : date('Y'))
+            ->where('tahun_pkau', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectPkau())
             ->orderBy('id_pkau', 'Desc')
             ->paginate($request->perPage ? $request->perPage : 10);
@@ -134,7 +134,7 @@ class PkauController extends Controller
             $storeData->nama_bidang_obrik = $namaBidangObrik;
             $storeData->nama_pkau = $request->namaPkau;
             $storeData->deskripsi_pkau = $request->deskripsiPkau;
-            $storeData->tahun_pkau = $request->tahunPkau;
+            $storeData->tahun_pkau = $request->tahun;
             $storeData->rmp = $request->rmp;
             $storeData->rpl = $request->rpl;
             $storeData->jumlah_hp_wpj = $request->jumlahHariPengawasanWpj;
@@ -226,7 +226,7 @@ class PkauController extends Controller
                     'nama_bidang_obrik' => $namaBidangObrik,
                     'nama_pkau' => $request->namaPkau,
                     'deskripsi_pkau' => $request->deskripsiPkau,
-                    'tahun_pkau' => $request->tahunPkau,
+                    'tahun_pkau' => $request->tahun,
                     'rmp' => $request->rmp,
                     'rpl' => $request->rpl,
                     'jumlah_hp_wpj' => $request->jumlahHariPengawasanWpj,
@@ -293,7 +293,7 @@ class PkauController extends Controller
         $auth = Auth::user();
         $data = Pkau::where('is_del', '=', 1)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('tahun_pkau', '=', $request->tahunPkau ? $request->tahunPkau : date('Y'))
+            ->where('tahun_pkau', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectPkau())
             ->orderBy('id_pkau', 'Desc')
             ->paginate($request->perPage ? $request->perPage : 10);
@@ -362,7 +362,7 @@ class PkauController extends Controller
         $auth = Auth::user();
         $data = Pkau::where('is_del', '=', 0)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('tahun_pkau', '=', $request->tahunPkau ? $request->tahunPkau : date('Y'))
+            ->where('tahun_pkau', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectPkau())
             ->orderBy('id_pkau', 'Desc')
             ->get();

@@ -48,7 +48,7 @@ class JakwasController extends Controller
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
             ->where('ren_jakwas.is_del', '=', 0)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('ren_jakwas.tahun', '=', $request->tahunJakwas ? $request->tahunJakwas : date('Y'))
+            ->where('ren_jakwas.tahun', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectJakwas())
             ->orderBy('ren_jakwas.id_jakwas', 'Desc')
             ->paginate($request->perPage ? $request->perPage : 10);
@@ -211,7 +211,7 @@ class JakwasController extends Controller
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
             ->where('ren_jakwas.is_del', '=', 1)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('ren_jakwas.tahun', '=', $request->tahunJakwas ? $request->tahunJakwas : date('Y'))
+            ->where('ren_jakwas.tahun', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectJakwas())
             ->orderBy('ren_jakwas.id_jakwas', 'Desc')
             ->paginate($request->perPage ? $request->perPage : 10);
