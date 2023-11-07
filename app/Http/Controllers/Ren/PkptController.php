@@ -136,7 +136,7 @@ class PkptController extends Controller
             $storeData->nama_bidang_obrik = $namaBidangObrik;
             $storeData->nama_pkpt = $request->namaPkpt;
             $storeData->deskripsi_pkpt = $request->deskripsiPkpt;
-            $storeData->tahun_pkpt = $request->tahun;
+            $storeData->tahun_pkpt = $request->tahunPkpt;
             $storeData->rmp = $request->rmp;
             $storeData->rpl = $request->rpl;
             $storeData->jumlah_hp_wpj = $request->jumlahHariPengawasanWpj;
@@ -228,7 +228,7 @@ class PkptController extends Controller
                     'nama_bidang_obrik' => $namaBidangObrik,
                     'nama_pkpt' => $request->namaPkpt,
                     'deskripsi_pkpt' => $request->deskripsiPkpt,
-                    'tahun_pkpt' => $request->tahun,
+                    'tahun_pkpt' => $request->tahunPkpt,
                     'rmp' => $request->rmp,
                     'rpl' => $request->rpl,
                     'jumlah_hp_wpj' => $request->jumlahHariPengawasanWpj,
@@ -364,7 +364,7 @@ class PkptController extends Controller
         $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 0)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('tahun_pkpt', '=', $request->tahun ? $request->tahunPkpt : date('Y'))
+            ->where('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectPkpt())
             ->orderBy('id_pkpt', 'Desc')
             ->get();

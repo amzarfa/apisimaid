@@ -134,7 +134,7 @@ class PkauController extends Controller
             $storeData->nama_bidang_obrik = $namaBidangObrik;
             $storeData->nama_pkau = $request->namaPkau;
             $storeData->deskripsi_pkau = $request->deskripsiPkau;
-            $storeData->tahun_pkau = $request->tahun;
+            $storeData->tahun_pkau = $request->tahunPkau;
             $storeData->rmp = $request->rmp;
             $storeData->rpl = $request->rpl;
             $storeData->jumlah_hp_wpj = $request->jumlahHariPengawasanWpj;
@@ -226,7 +226,7 @@ class PkauController extends Controller
                     'nama_bidang_obrik' => $namaBidangObrik,
                     'nama_pkau' => $request->namaPkau,
                     'deskripsi_pkau' => $request->deskripsiPkau,
-                    'tahun_pkau' => $request->tahun,
+                    'tahun_pkau' => $request->tahunPkau,
                     'rmp' => $request->rmp,
                     'rpl' => $request->rpl,
                     'jumlah_hp_wpj' => $request->jumlahHariPengawasanWpj,
