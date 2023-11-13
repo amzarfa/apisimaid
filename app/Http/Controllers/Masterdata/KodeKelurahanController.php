@@ -83,14 +83,9 @@ class KodeKelurahanController extends Controller
         )
             ->where('is_del', '=', 0)
             ->where('kode_kecamatan', '=', $request->kodeKecamatan)
-            // ->paginate(100);
             ->get();
         $response = Helper::labelMessageSuccessWithCountData($data);
         return response()->json($response, 200);
-
-        // $response = $data->toArray();
-        // $customResponse = Helper::paginateCustomResponse($response);
-        // return response()->json($customResponse, 200);
     }
 
     /**

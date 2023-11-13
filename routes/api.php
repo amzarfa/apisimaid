@@ -79,5 +79,8 @@ Route::group(['middleware' => ['cors']], function () {
 
         // REPORT
         Route::get('ren/report', 'Ren\Report\ReportController@index');
+
+        // UPLOAD FILE
+        Route::post('uploadfile', 'UploadFileController@upload');
     });
 });

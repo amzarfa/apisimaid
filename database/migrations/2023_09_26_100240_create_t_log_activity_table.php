@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('activity');
             $table->string('method');
             $table->string('key');
+            $table->string('keyname');
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));
         });

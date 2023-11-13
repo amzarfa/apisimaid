@@ -86,7 +86,7 @@ class PkptController extends Controller
             return $data;
         });
         $response = $data->toArray();
-        $customResponse = Helper::paginateCustomResponse($response);
+        $customResponse = Helper::paginateCustomResponseRen($response);
         return response()->json($customResponse, 200);
     }
 
@@ -305,7 +305,7 @@ class PkptController extends Controller
             return $data;
         });
         $response = $data->toArray();
-        $customResponse = Helper::paginateCustomResponse($response);
+        $customResponse = Helper::paginateCustomResponseRen($response);
         return response()->json($customResponse, 200);
     }
 
@@ -354,7 +354,7 @@ class PkptController extends Controller
             return $data;
         });
         $response = $data->toArray();
-        $customResponse = Helper::paginateCustomResponse($response);
+        $customResponse = Helper::paginateCustomResponseRen($response);
         return response()->json($customResponse, 200);
     }
 

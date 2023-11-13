@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\LogActivity;
+use Illuminate\Support\Facades\URL;
 
 class Helper
 {
@@ -168,8 +169,15 @@ class Helper
         return $data->nama_bidang_obrik;
     }
 
-    public static function paginateCustomResponse($response)
+    public static function paginateCustomResponseRen($response)
     {
+        $baseUrl = URL::to('/');
+        $path = str_replace($baseUrl, '', str_replace('/api/ren', '', $response['path']));
+        $firstPageUrl = $response['first_page_url'] ? str_replace($baseUrl, '', str_replace('/api/ren', '', $response['first_page_url'])) : null;
+        $lastPageUrl = $response['last_page_url'] ? str_replace($baseUrl, '', str_replace('/api/ren', '', $response['last_page_url'])) : null;
+        $prevPageUrl = $response['prev_page_url'] ? str_replace($baseUrl, '', str_replace('/api/ren', '', $response['prev_page_url'])) : null;
+        $nextPageUrl = $response['next_page_url'] ? str_replace($baseUrl, '', str_replace('/api/ren', '', $response['next_page_url'])) : null;
+
         $data = array(
             'status' => true,
             'statusCode' => 200,
@@ -180,15 +188,27 @@ class Helper
             'to' => $response['to'],
             'currentPage' => $response['current_page'],
             'lastPage' => $response['last_page'],
-            'path' => $response['path'],
-            'firstPageUrl' => $response['first_page_url'],
-            'lastPageUrl' => $response['last_page_url'],
-            'prevPageUrl' => $response['prev_page_url'],
-            'nextPageUrl' => $response['next_page_url'],
+            'path' => $path,
+            'firstPageUrl' => $firstPageUrl,
+            'lastPageUrl' => $lastPageUrl,
+            'prevPageUrl' => $prevPageUrl,
+            'nextPageUrl' => $nextPageUrl,
             'perPage' => $response['per_page'],
             'data' => $response['data'],
-            'links' => $response['links'],
+            // 'links' => $response['links'],
+            'links' => array(),
         );
+
+        // Perulangan untuk menghapus base URL dari setiap URL dalam array "links"
+        foreach ($response['links'] as $link) {
+            $url = str_replace($baseUrl, '', str_replace('/api/ren', '', $link['url']));
+            $data['links'][] = array(
+                'url' => $url,
+                'label' => $link['label'],
+                'active' => $link['active'],
+            );
+        }
+
         return $data;
     }
 
@@ -216,6 +236,37 @@ class Helper
             'status' => true,
             'statusCode' => 200,
             'message' => 'mengupload Logo Unit Audit. Kode Unit Audit : ' . $kodeUnitAudit,
+            'filePath' => $filepath,
+            'filePathWithUrl' => url($filepath),
+        );
+        return $response;
+    }
+
+    public static function uploadFile($dataUpload, $kodeUnitAudit, $folder)
+    {
+        $auth = Auth::user();
+        $fileSize = $dataUpload->getSize();
+        $fileSize = number_format($fileSize / 1048576, 2);
+        if ($fileSize > 10) {
+            $response = Helper::labelMessageFailed('Data terlalu besar! Maksimal 10 MB');
+            return $response;
+        }
+        $filename = time() . '.' . $dataUpload->getClientOriginalExtension();
+        // $path = $dataUpload->storeAs($kodeUnitAudit . '/logo', $filename, 'public');
+        $path = $dataUpload->storeAs($kodeUnitAudit . '/' . $folder, $filename, 'public');
+        $filepath = 'storage/' . $path;
+
+        // Log Activity
+        $key = $kodeUnitAudit;
+        $page = 'Upload File ' . $folder;
+        $activity = $auth->name . ' mengupload File ' . $folder . '. Kode Unit Audit : ' . $kodeUnitAudit . '. Path File : ' . $path;
+        $method = 'UPLOAD';
+        Helper::createLogActivity($key, $page, $activity, $method);
+
+        $response = array(
+            'status' => true,
+            'statusCode' => 200,
+            'message' => 'mengupload File ' . $folder . '. Kode Unit Audit : ' . $kodeUnitAudit,
             'filePath' => $filepath,
             'filePathWithUrl' => url($filepath),
         );
