@@ -112,19 +112,14 @@ class PkptController extends Controller
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
-        // $idJakwas = Hashids::decode($request->idJakwas)[0];
-        $responseHelper = [
-            'request' => $request->all(),
-        ];
-        return response()->json($responseHelper, 200);
-
+        $idJakwas = Hashids::decode($request->idJakwas)[0];
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menambah Data Pkpt');
             return response()->json($response, 403);
         } else {
             // Store
             $storeData = new Pkpt();
-            // $storeData->id_jakwas = $idJakwas;
+            $storeData->id_jakwas = $idJakwas;
             $storeData->kode_sub_unit_audit = $request->kodeSubUnitAudit;
             $storeData->nama_sub_unit_audit = $namaSubUnitAudit;
             $storeData->kode_unit_audit = $request->kodeUnitAudit;
