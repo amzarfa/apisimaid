@@ -151,9 +151,7 @@ class PkptController extends Controller
 
             // Audit Trails
             $storeData->created_by = $auth->name;
-            // $storeData->save();
-
-            return response()->json($storeData, 401);
+            $storeData->save();
 
             // Log Activity
             $key = $storeData->id;
