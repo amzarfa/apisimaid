@@ -16,6 +16,8 @@ use App\Models\Masterdata\KodeLingkupAudit;
 use App\Models\Masterdata\KodeJenisPengawasan;
 use App\Models\Masterdata\KodeAreaPengawasan;
 use App\Models\Masterdata\KodeTingkatResiko;
+use App\Models\Ren\Jakwas;
+use Vinkla\Hashids\Facades\Hashids;
 
 class OptionsController extends Controller
 {
@@ -32,12 +34,13 @@ class OptionsController extends Controller
     // Options untuk Kode Unit Obrik
     public function kodeunitobrik(Request $request)
     {
+        $auth = Auth::user();
         $data = KodeUnitObrik::select(
-            'tr_kode_unit_obrik.kode_unit_obrik as value',
-            'tr_kode_unit_obrik.nama_unit_obrik as label',
+            'kode_unit_obrik as value',
+            'nama_unit_obrik as label',
         )
-            ->leftjoin('tr_kode_unit_audit as unitaudit', 'unitaudit.kode_unit_audit', '=', 'tr_kode_unit_obrik.kode_unit_audit')
-            ->where('tr_kode_unit_obrik.is_del', '=', 0)
+            ->where('is_del', '=', 0)
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
             ->get();
         return response()->json($data, 200);
     }
@@ -142,6 +145,24 @@ class OptionsController extends Controller
         )
             ->where('is_del', '=', 0)
             ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Jakwas
+    public function optionjakwas(Request $request)
+    {
+        $auth = Auth::user();
+        $data = Jakwas::select(
+            'id_jakwas as value',
+            'nama_jakwas as label',
+        )
+            ->where('is_del', '=', 0)
+            ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->get();
+        $data->transform(function ($data) {
+            $data->value = Hashids::encode($data->value);
+            return $data;
+        });
         return response()->json($data, 200);
     }
 }

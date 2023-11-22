@@ -39,6 +39,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::get('options/jenispengawasan', 'Options\OptionsController@jenispengawasan');
         Route::get('options/areapengawasan', 'Options\OptionsController@areapengawasan');
         Route::get('options/tingkatresiko', 'Options\OptionsController@tingkatresiko');
+        Route::get('options/optionjakwas', 'Options\OptionsController@optionjakwas');
 
         // Wilayah
         Route::resource('provinsi', 'Masterdata\KodeProvinsiController');

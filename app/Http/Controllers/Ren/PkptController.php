@@ -12,6 +12,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Resources\PkptResource;
 use App\Exports\Ren\PkptExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class PkptController extends Controller
 {
@@ -70,19 +71,90 @@ class PkptController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index(Request $request)
+    // {
+    //     $whereData = array();
+    //     $whereData[] = array('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'));
+    //     $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaIrban . '%' ? '%' . $request->namaIrban . '%' : '');
+    //     $whereData[] = array('nama_lingkup_audit', 'LIKE', '%' . $request->lingkupAudit . '%' ? '%' . $request->lingkupAudit . '%' : '');
+    //     $whereData[] = array('nama_area_pengawasan', 'LIKE', '%' . $request->areaPengawasan . '%' ? '%' . $request->areaPengawasan . '%' : '');
+    //     $whereData[] = array('nama_jenis_pengawasan', 'LIKE', '%' . $request->jenisPengawasan . '%' ? '%' . $request->jenisPengawasan . '%' : '');
+    //     $whereData[] = array('nama_tingkat_resiko', 'LIKE', '%' . $request->tingkatResiko . '%' ? '%' . $request->tingkatResiko . '%' : '');
+    //     $whereData[] = array('nama_bidang_obrik', 'LIKE', '%' . $request->bidangObrik . '%' ? '%' . $request->bidangObrik . '%' : '');
+    //     $whereData[] = array('nama_pkpt', 'LIKE', '%' . $request->namaPkpt . '%' ? '%' . $request->namaPkpt . '%' : '');
+    //     $whereData[] = array('created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
+
+    //     $orderBy = array();
+    //     $orderBy[] = array('nama_sub_unit_audit', 'Desc');
+
+    //     $auth = Auth::user();
+    //     $data = Pkpt::where('is_del', '=', 0)
+    //         ->select($this->selectPkpt())
+    //         ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+    //         ->where($whereData)
+    //         ->orderBy('id_pkpt', 'Desc')
+    //         ->paginate($request->perPage ? $request->perPage : 10);
+    //     $data->getCollection()->transform(function ($data) {
+    //         $data->idPkpt = Hashids::encode($data->idPkpt);
+    //         $data->idJakwas = Hashids::encode($data->idJakwas);
+    //         $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+    //         return $data;
+    //     });
+    //     $response = $data->toArray();
+    //     $customResponse = Helper::paginateCustomResponseRen($response);
+    //     return response()->json($customResponse, 200);
+    // }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         $auth = Auth::user();
-        $data = Pkpt::where('is_del', '=', 0)
-            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'))
+        $whereData = array();
+
+        // All Where ada di sini
+        $whereData[] = array('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'));
+        $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaSubUnitAudit . '%' ? '%' . $request->namaSubUnitAudit . '%' : '');
+        $whereData[] = array('nama_lingkup_audit', 'LIKE', '%' . $request->namaLingkupAudit . '%' ? '%' . $request->namaLingkupAudit . '%' : '');
+        $whereData[] = array('nama_area_pengawasan', 'LIKE', '%' . $request->namaAreaPengawasan . '%' ? '%' . $request->namaAreaPengawasan . '%' : '');
+        $whereData[] = array('nama_jenis_pengawasan', 'LIKE', '%' . $request->namaJenisPengawasan . '%' ? '%' . $request->namaJenisPengawasan . '%' : '');
+        $whereData[] = array('nama_tingkat_resiko', 'LIKE', '%' . $request->namaTingkatResiko . '%' ? '%' . $request->namaTingkatResiko . '%' : '');
+        $whereData[] = array('nama_bidang_obrik', 'LIKE', '%' . $request->namaBidangObrik . '%' ? '%' . $request->namaBidangObrik . '%' : '');
+        $whereData[] = array('nama_pkpt', 'LIKE', '%' . $request->namaPkpt . '%' ? '%' . $request->namaPkpt . '%' : '');
+        $whereData[] = array('created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
+
+        $auth = Auth::user();
+        $query = Pkpt::where('is_del', '=', 0)
             ->select($this->selectPkpt())
-            ->orderBy('id_pkpt', 'Desc')
-            ->paginate($request->perPage ? $request->perPage : 10);
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where($whereData);
+
+        // Tangani sort by dari frontend
+        if ($request->has('sort')) {
+            $sorts = explode(',', $request->sort);
+            foreach ($sorts as $sort) {
+                $sortDetail = explode(':', $sort);
+                $sortColumn = $sortDetail[0];
+                $sortDirection = $sortDetail[1] ?? 'asc'; // Default ke ascend jika tidak ada arah yang diberikan
+                $sortableColumns = [
+                    'namaSubUnitAudit', 'namaLingkupAudit', 'namaAreaPengawasan', 'namaJenisPengawasan',
+                    'namaTingkatResiko', 'namaBidangObrik', 'namaPkpt', 'createdBy', // ubah ke camelCase
+                ];
+                if (in_array($sortColumn, $sortableColumns)) {
+                    $sortColumn = Str::snake($sortColumn); // Konversi ke snake_case untuk penggunaan dalam orderBy
+                    $query->orderBy($sortColumn, $sortDirection);
+                }
+            }
+        } else {
+            $query->orderBy('id_pkpt', 'desc');
+        }
+
+        $data = $query->paginate($request->perPage ? $request->perPage : 10);
         $data->getCollection()->transform(function ($data) {
             $data->idPkpt = Hashids::encode($data->idPkpt);
             $data->idJakwas = Hashids::encode($data->idJakwas);
-            // $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
         $response = $data->toArray();
