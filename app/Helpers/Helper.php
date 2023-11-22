@@ -123,6 +123,9 @@ class Helper
 
     public static function getNamaLingkupAudit($kodeLingkupAudit)
     {
+        if ($kodeLingkupAudit === null) {
+            return null;
+        }
         $data = DB::table('tr_kode_lingkup_audit')
             ->where('kode_lingkup_audit', $kodeLingkupAudit)
             ->select('nama_lingkup_audit')
@@ -132,6 +135,9 @@ class Helper
 
     public static function getNamaAreaPengawasan($kodeAreaPengawasan)
     {
+        if ($kodeAreaPengawasan === null) {
+            return null;
+        }
         $data = DB::table('tr_kode_area_pengawasan')
             ->where('kode_area_pengawasan', $kodeAreaPengawasan)
             ->select('nama_area_pengawasan')
@@ -141,6 +147,9 @@ class Helper
 
     public static function getNamaJenisPengawasan($kodeJenisPengawasan)
     {
+        if ($kodeJenisPengawasan === null) {
+            return null;
+        }
         $data = DB::table('tr_kode_jenis_pengawasan')
             ->where('kode_jenis_pengawasan', $kodeJenisPengawasan)
             ->select('nama_jenis_pengawasan')
@@ -150,6 +159,9 @@ class Helper
 
     public static function getNamaTingkatResiko($kodeTingkatResiko)
     {
+        if ($kodeTingkatResiko === null) {
+            return null;
+        }
         $data = DB::table('tr_kode_tingkat_resiko')
             ->where('kode_tingkat_resiko', $kodeTingkatResiko)
             ->select('nama_tingkat_resiko')

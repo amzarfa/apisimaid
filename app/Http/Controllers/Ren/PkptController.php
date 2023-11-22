@@ -82,7 +82,7 @@ class PkptController extends Controller
         $data->getCollection()->transform(function ($data) {
             $data->idPkpt = Hashids::encode($data->idPkpt);
             $data->idJakwas = Hashids::encode($data->idJakwas);
-            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            // $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
         $response = $data->toArray();
@@ -104,6 +104,7 @@ class PkptController extends Controller
     public function store(Request $request)
     {
         $auth = Auth::user();
+
         $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
         $namaUnitAudit = Helper::getNamaUnitAudit($request->kodeUnitAudit);
         $namaLingkupAudit = Helper::getNamaLingkupAudit($request->kodeLingkupAudit);
@@ -111,7 +112,11 @@ class PkptController extends Controller
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
-        $idJakwas = Hashids::decode($request->idJakwas)[0];
+        // $idJakwas = Hashids::decode($request->idJakwas)[0];
+        $responseHelper = [
+            'request' => $request->all(),
+        ];
+        return response()->json($responseHelper, 200);
 
         if ($auth->peran != 'admin') {
             $response = Helper::labelMessageForbidden('menambah Data Pkpt');
@@ -119,7 +124,7 @@ class PkptController extends Controller
         } else {
             // Store
             $storeData = new Pkpt();
-            $storeData->id_jakwas = $idJakwas;
+            // $storeData->id_jakwas = $idJakwas;
             $storeData->kode_sub_unit_audit = $request->kodeSubUnitAudit;
             $storeData->nama_sub_unit_audit = $namaSubUnitAudit;
             $storeData->kode_unit_audit = $request->kodeUnitAudit;
@@ -151,7 +156,9 @@ class PkptController extends Controller
 
             // Audit Trails
             $storeData->created_by = $auth->name;
-            $storeData->save();
+            // $storeData->save();
+
+            return response()->json($storeData, 401);
 
             // Log Activity
             $key = $storeData->id;

@@ -23,11 +23,11 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Coba untuk melakukan login
+        // Coba untuk login
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->plainTextToken;
-            // Menghapus angka yang mewakili jumlah login dari token
+            // Delete angka yang mewakili jumlah login dari token
             $tokenParts = explode('|', $token);
             if (count($tokenParts) === 2) {
                 $token = $tokenParts[1];

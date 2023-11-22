@@ -29,6 +29,17 @@ Route::group(['middleware' => ['cors']], function () {
         // User Management
         Route::resource('usermanagement', 'User\UserManagementController');
 
+        // Options
+        Route::get('options/kodeunitobrik', 'Options\OptionsController@kodeunitobrik');
+        Route::get('options/bidangobrik', 'Options\OptionsController@bidangobrik');
+        Route::get('options/subbidangobrik', 'Options\OptionsController@subbidangobrik');
+        Route::get('options/subunitaudit', 'Options\OptionsController@subunitaudit');
+        Route::get('options/gruplingkupaudit', 'Options\OptionsController@gruplingkupaudit');
+        Route::get('options/kodelingkupaudit', 'Options\OptionsController@kodelingkupaudit');
+        Route::get('options/jenispengawasan', 'Options\OptionsController@jenispengawasan');
+        Route::get('options/areapengawasan', 'Options\OptionsController@areapengawasan');
+        Route::get('options/tingkatresiko', 'Options\OptionsController@tingkatresiko');
+
         // Wilayah
         Route::resource('provinsi', 'Masterdata\KodeProvinsiController');
         Route::resource('kabkota', 'Masterdata\KodeKabkotaController');
