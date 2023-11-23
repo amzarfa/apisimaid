@@ -13,6 +13,7 @@ use App\Http\Resources\PkptResource;
 use App\Exports\Ren\PkptExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PkptController extends Controller
 {
@@ -71,43 +72,6 @@ class PkptController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index(Request $request)
-    // {
-    //     $whereData = array();
-    //     $whereData[] = array('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'));
-    //     $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaIrban . '%' ? '%' . $request->namaIrban . '%' : '');
-    //     $whereData[] = array('nama_lingkup_audit', 'LIKE', '%' . $request->lingkupAudit . '%' ? '%' . $request->lingkupAudit . '%' : '');
-    //     $whereData[] = array('nama_area_pengawasan', 'LIKE', '%' . $request->areaPengawasan . '%' ? '%' . $request->areaPengawasan . '%' : '');
-    //     $whereData[] = array('nama_jenis_pengawasan', 'LIKE', '%' . $request->jenisPengawasan . '%' ? '%' . $request->jenisPengawasan . '%' : '');
-    //     $whereData[] = array('nama_tingkat_resiko', 'LIKE', '%' . $request->tingkatResiko . '%' ? '%' . $request->tingkatResiko . '%' : '');
-    //     $whereData[] = array('nama_bidang_obrik', 'LIKE', '%' . $request->bidangObrik . '%' ? '%' . $request->bidangObrik . '%' : '');
-    //     $whereData[] = array('nama_pkpt', 'LIKE', '%' . $request->namaPkpt . '%' ? '%' . $request->namaPkpt . '%' : '');
-    //     $whereData[] = array('created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
-
-    //     $orderBy = array();
-    //     $orderBy[] = array('nama_sub_unit_audit', 'Desc');
-
-    //     $auth = Auth::user();
-    //     $data = Pkpt::where('is_del', '=', 0)
-    //         ->select($this->selectPkpt())
-    //         ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-    //         ->where($whereData)
-    //         ->orderBy('id_pkpt', 'Desc')
-    //         ->paginate($request->perPage ? $request->perPage : 10);
-    //     $data->getCollection()->transform(function ($data) {
-    //         $data->idPkpt = Hashids::encode($data->idPkpt);
-    //         $data->idJakwas = Hashids::encode($data->idJakwas);
-    //         $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
-    //         return $data;
-    //     });
-    //     $response = $data->toArray();
-    //     $customResponse = Helper::paginateCustomResponseRen($response);
-    //     return response()->json($customResponse, 200);
-    // }
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $auth = Auth::user();
@@ -139,7 +103,7 @@ class PkptController extends Controller
                 $sortDirection = $sortDetail[1] ?? 'asc'; // Default ke ascend jika tidak ada arah yang diberikan
                 $sortableColumns = [
                     'namaSubUnitAudit', 'namaLingkupAudit', 'namaAreaPengawasan', 'namaJenisPengawasan',
-                    'namaTingkatResiko', 'namaBidangObrik', 'namaPkpt', 'createdBy', // ubah ke camelCase
+                    'namaTingkatResiko', 'namaBidangObrik', 'namaPkpt', 'createdBy', // camelCase dari frontend
                 ];
                 if (in_array($sortColumn, $sortableColumns)) {
                     $sortColumn = Str::snake($sortColumn); // Konversi ke snake_case untuk penggunaan dalam orderBy
@@ -152,9 +116,9 @@ class PkptController extends Controller
 
         $data = $query->paginate($request->perPage ? $request->perPage : 10);
         $data->getCollection()->transform(function ($data) {
-            $data->idPkpt = Hashids::encode($data->idPkpt);
-            $data->idJakwas = Hashids::encode($data->idJakwas);
-            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            // $data->idPkpt = Hashids::encode($data->idPkpt);
+            // $data->idJakwas = Hashids::encode($data->idJakwas);
+            // $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
         $response = $data->toArray();
@@ -178,7 +142,7 @@ class PkptController extends Controller
         $auth = Auth::user();
 
         $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
-        $namaUnitAudit = Helper::getNamaUnitAudit($request->kodeUnitAudit);
+        $namaUnitAudit = Helper::getNamaUnitAudit($auth->kode_unit_audit);
         $namaLingkupAudit = Helper::getNamaLingkupAudit($request->kodeLingkupAudit);
         $namaAreaPengawasan = Helper::getNamaAreaPengawasan($request->kodeAreaPengawasan);
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
@@ -430,7 +394,7 @@ class PkptController extends Controller
         return response()->json($customResponse, 200);
     }
 
-    // Export
+    // Export Excel
     public function downloadPkpt(Request $request)
     {
         $auth = Auth::user();
@@ -447,6 +411,26 @@ class PkptController extends Controller
             return $data;
         });
         $response = $data;
-        return Excel::download(new PkptExport($response), 'PKPT Export ' . $auth->kode_unit_audit . '.xlsx');
+        return Excel::download(new PkptExport($response), 'PKPT Export ' . $auth->nama_unit_audit . '.xlsx');
+    }
+
+    // Export Pdf
+    public function downloadPkptPdf(Request $request)
+    {
+        $auth = Auth::user();
+        $data = Pkpt::where('is_del', '=', 0)
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'))
+            ->select($this->selectPkpt())
+            ->orderBy('id_pkpt', 'Desc')
+            ->get();
+        $data->transform(function ($data) {
+            $data->idPkpt = Hashids::encode($data->idPkpt);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            return $data;
+        });
+        $pdf = PDF::loadView('exports.pkptexport', $data);
+        return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
     }
 }
