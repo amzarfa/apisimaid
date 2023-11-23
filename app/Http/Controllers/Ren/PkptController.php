@@ -116,9 +116,9 @@ class PkptController extends Controller
 
         $data = $query->paginate($request->perPage ? $request->perPage : 10);
         $data->getCollection()->transform(function ($data) {
-            // $data->idPkpt = Hashids::encode($data->idPkpt);
-            // $data->idJakwas = Hashids::encode($data->idJakwas);
-            // $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+            $data->idPkpt = Hashids::encode($data->idPkpt);
+            $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
         $response = $data->toArray();
@@ -158,7 +158,7 @@ class PkptController extends Controller
             $storeData->id_jakwas = $idJakwas;
             $storeData->kode_sub_unit_audit = $request->kodeSubUnitAudit;
             $storeData->nama_sub_unit_audit = $namaSubUnitAudit;
-            $storeData->kode_unit_audit = $request->kodeUnitAudit;
+            $storeData->kode_unit_audit = $auth->kode_unit_audit;
             $storeData->nama_unit_audit = $namaUnitAudit;
             $storeData->kode_lingkup_audit = $request->kodeLingkupAudit;
             $storeData->nama_lingkup_audit = $namaLingkupAudit;
@@ -233,7 +233,7 @@ class PkptController extends Controller
         $auth = Auth::user();
         $id = Hashids::decode($id)[0];
         $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
-        $namaUnitAudit = Helper::getNamaUnitAudit($request->kodeUnitAudit);
+        $namaUnitAudit = Helper::getNamaUnitAudit($auth->kode_unit_audit);
         $namaLingkupAudit = Helper::getNamaLingkupAudit($request->kodeLingkupAudit);
         $namaAreaPengawasan = Helper::getNamaAreaPengawasan($request->kodeAreaPengawasan);
         $namaJenisPengawasan = Helper::getNamaJenisPengawasan($request->kodeJenisPengawasan);
@@ -250,7 +250,7 @@ class PkptController extends Controller
                     'id_jakwas' => $idJakwas,
                     'kode_sub_unit_audit' => $request->kodeSubUnitAudit,
                     'nama_sub_unit_audit' => $namaSubUnitAudit,
-                    'kode_unit_audit' => $request->kodeUnitAudit,
+                    'kode_unit_audit' => $auth->kode_unit_audit,
                     'nama_unit_audit' => $namaUnitAudit,
                     'kode_lingkup_audit' => $request->kodeLingkupAudit,
                     'nama_lingkup_audit' => $namaLingkupAudit,
