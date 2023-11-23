@@ -211,6 +211,8 @@ class PkptController extends Controller
         $id = Hashids::decode($id)[0];
         $data = Pkpt::select($this->selectPkpt())
             ->where('id_pkpt', '=', $id)->first();
+        $kodeUnitObrik = substr($data->kodeBidangObrik, 0, 6);
+        $data->kodeUnitObrik = $kodeUnitObrik;
         $data->idPkpt = Hashids::encode($data->idPkpt);
         $data->idJakwas = Hashids::encode($data->idJakwas);
         $response = Helper::labelMessageSuccessWithData($data);
@@ -430,6 +432,10 @@ class PkptController extends Controller
             $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
+
+        dd($data);
+        die();
+
         $pdf = PDF::loadView('exports.pkptexport', $data);
         return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
     }
