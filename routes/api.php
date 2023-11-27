@@ -81,6 +81,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::patch('ren/activatepkpt/{id}', 'Ren\PkptController@activatePkpt');
         Route::get('ren/searchpkpt', 'Ren\PkptController@search');
         Route::get('ren/downloadpkpt', 'Ren\PkptController@downloadPkpt');
+        Route::get('ren/downloadpkpt/pdf', 'Ren\PkptController@downloadPkptPdf');
 
         // PKAU
         Route::resource('ren/pkau', 'Ren\PkauController');

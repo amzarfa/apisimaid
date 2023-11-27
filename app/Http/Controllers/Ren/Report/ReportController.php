@@ -13,11 +13,18 @@ class ReportController extends Controller
         $data = [
             [
                 'urlDownload' => url('/api/ren/downloadpkpt'),
-                'title' => 'Download PKPT',
+                'type' => 'xlsx',
+                'title' => 'Download List PKPT Excel',
             ],
             [
                 'urlDownload' => url('/api/ren/downloadpkau'),
-                'title' => 'Download PKAU',
+                'type' => 'xlsx',
+                'title' => 'Download List PKAU Excel',
+            ],
+            [
+                'urlDownload' => url('/api/ren/downloadpkpt/pdf'),
+                'type' => 'pdf',
+                'title' => 'Download List PKPT PDF',
             ],
         ];
 

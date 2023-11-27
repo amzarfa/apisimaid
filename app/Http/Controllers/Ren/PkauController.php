@@ -373,6 +373,6 @@ class PkauController extends Controller
             return $data;
         });
         $response = $data;
-        return Excel::download(new PkauExport($response), 'PKAU Export ' . $auth->kode_unit_audit . '.xlsx');
+        return Excel::download(new PkauExport($response), 'PKAU Export ' . $auth->nama_unit_audit . '.xlsx');
     }
 }

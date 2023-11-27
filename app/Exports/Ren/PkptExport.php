@@ -31,6 +31,8 @@ class PkptExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
         return [
             'idPkpt',
             'idJakwas',
+            'namaPkpt',
+            'deskripsiPkpt',
             'kodeSubUnitAudit',
             'namaSubUnitAudit',
             'kodeUnitAudit',
@@ -45,8 +47,6 @@ class PkptExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
             'namaTingkatResiko',
             'kodeBidangObrik',
             'namaBidangObrik',
-            'namaPkpt',
-            'deskripsiPkpt',
             'tahunPkpt',
             'rmp',
             'rpl',

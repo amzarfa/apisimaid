@@ -31,6 +31,8 @@ class PkauExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
         return [
             'idPkau',
             'idJakwas',
+            'namaPkau',
+            'deskripsiPkau',
             'kodeSubUnitAudit',
             'namaSubUnitAudit',
             'kodeUnitAudit',
@@ -45,8 +47,6 @@ class PkauExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
             'namaTingkatResiko',
             'kodeBidangObrik',
             'namaBidangObrik',
-            'namaPkau',
-            'deskripsiPkau',
             'tahunPkau',
             'rmp',
             'rpl',

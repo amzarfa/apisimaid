@@ -422,21 +422,30 @@ class PkptController extends Controller
         $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 0)
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectPkpt())
             ->orderBy('id_pkpt', 'Desc')
             ->get();
-        $data->transform(function ($data) {
+
+        $totalAnggaran = $data->sum('anggaranBiaya');
+        $data->transform(function ($data, $key) {
+            $data->no = $key + 1;
             $data->idPkpt = Hashids::encode($data->idPkpt);
             $data->idJakwas = Hashids::encode($data->idJakwas);
             $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
 
-        dd($data);
-        die();
+        $response = [
+            'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
+            'data' => $data,
+        ];
+        // return response()->json($response, 200);
 
-        $pdf = PDF::loadView('exports.pkptexport', $data);
+        // $pdf = PDF::loadView('exports.pkptexport', $data);
+        $pdf = PDF::loadView('exports.pkptexport', [
+            'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
+            'data' => $data,
+        ]);
         return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
     }
 }

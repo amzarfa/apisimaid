@@ -134,10 +134,10 @@ class KodeBidangObrikSeeder extends Seeder
             ['kode_bidang_obrik' => '160506040', 'kode_unit_obrik' => '160506', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'SDN 32 Mataram',],
             ['kode_bidang_obrik' => '160506041', 'kode_unit_obrik' => '160506', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'SMPN 1 Mataram',],
             ['kode_bidang_obrik' => '160506042', 'kode_unit_obrik' => '160506', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'SMPN 16 Mataram',],
-            ['kode_bidang_obrik' => '160510001', 'kode_unit_obrik' => '160507', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Inspektorat',],
-            ['kode_bidang_obrik' => '160510002', 'kode_unit_obrik' => '160507', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Satuan Polisi Pamong Praja',],
-            ['kode_bidang_obrik' => '160510003', 'kode_unit_obrik' => '160507', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Sekretariat DPRD',],
-            ['kode_bidang_obrik' => '160511001', 'kode_unit_obrik' => '160508', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Rumah Sakit Umum Daerah Kelas B',],
+            ['kode_bidang_obrik' => '160507001', 'kode_unit_obrik' => '160507', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Inspektorat',],
+            ['kode_bidang_obrik' => '160507002', 'kode_unit_obrik' => '160507', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Satuan Polisi Pamong Praja',],
+            ['kode_bidang_obrik' => '160507003', 'kode_unit_obrik' => '160507', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Sekretariat DPRD',],
+            ['kode_bidang_obrik' => '160508001', 'kode_unit_obrik' => '160508', 'kode_unit_audit' => '1605', 'nama_bidang_obrik' => 'Rumah Sakit Umum Daerah Kelas B',],
         ];
 
         // Ubah nama tabel sesuai dengan tabel yang digunakan
