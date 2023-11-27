@@ -224,7 +224,15 @@ class PkptController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $id = Hashids::decode($id)[0];
+        $data = Pkpt::select($this->selectPkpt())
+            ->where('id_pkpt', '=', $id)->first();
+        $kodeUnitObrik = substr($data->kodeBidangObrik, 0, 6);
+        $data->kodeUnitObrik = $kodeUnitObrik;
+        $data->idPkpt = Hashids::encode($data->idPkpt);
+        $data->idJakwas = Hashids::encode($data->idJakwas);
+        $response = Helper::labelMessageSuccessWithData($data);
+        return response()->json($response, 200);
     }
 
     /**
@@ -233,7 +241,7 @@ class PkptController extends Controller
     public function update(Request $request, string $id)
     {
         $auth = Auth::user();
-        $id = Hashids::decode($id)[0];
+        $idPkpt = Hashids::decode($id)[0];
         $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
         $namaUnitAudit = Helper::getNamaUnitAudit($auth->kode_unit_audit);
         $namaLingkupAudit = Helper::getNamaLingkupAudit($request->kodeLingkupAudit);
@@ -247,7 +255,7 @@ class PkptController extends Controller
             $response = Helper::labelMessageForbidden('mengubah Data Pkpt');
             return response()->json($response, 403);
         } else {
-            $data = Pkpt::where('id_pkpt', '=', $id)
+            $data = Pkpt::where('id_pkpt', '=', $idPkpt)
                 ->update([
                     'id_jakwas' => $idJakwas,
                     'kode_sub_unit_audit' => $request->kodeSubUnitAudit,
