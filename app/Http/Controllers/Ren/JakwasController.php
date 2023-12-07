@@ -46,7 +46,6 @@ class JakwasController extends Controller
     public function index(Request $request)
     {
         $auth = Auth::user();
-
         $query = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
             ->select($this->selectJakwas())
