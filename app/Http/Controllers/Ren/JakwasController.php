@@ -9,6 +9,7 @@ use App\Helpers\Helper;
 use App\Models\Ren\Jakwas;
 use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Str;
 
 class JakwasController extends Controller
 {
@@ -44,21 +45,67 @@ class JakwasController extends Controller
     public function index(Request $request)
     {
         $auth = Auth::user();
-        $data = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
+        $idJakwasDecode = Hashids::decode($request->idJakwas);
+
+        $whereData = array();
+
+        // All Where ada di sini
+        $whereData[] = array('id_jakwas', '=', $idJakwasDecode ? $idJakwasDecode : '');
+        $whereData[] = array('tahun', 'LIKE', $request->tahun ? $request->tahun : date('Y'));
+        $whereData[] = array('nama_jakwas', 'LIKE', $request->namaJakwas ? $request->namaJakwas : '');
+        $whereData[] = array('deskripsi', 'LIKE', $request->deskripsi ? $request->deskripsi : '');
+        $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaSubUnitAudit . '%' ? '%' . $request->namaSubUnitAudit . '%' : '');
+        $whereData[] = array('nama_pkpt', 'LIKE', '%' . $request->namaPkpt . '%' ? '%' . $request->namaPkpt . '%' : '');
+        $whereData[] = array('created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
+
+        $query = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
             ->where('ren_jakwas.is_del', '=', 0)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where('ren_jakwas.tahun', '=', $request->tahun ? $request->tahun : date('Y'))
-            ->select($this->selectJakwas())
-            ->orderBy('ren_jakwas.id_jakwas', 'Desc')
-            ->paginate($request->perPage ? $request->perPage : 10);
+            ->where($whereData);
+
+        // Tangani sort by dari frontend
+        if ($request->has('sort')) {
+            $sorts = explode(',', $request->sort);
+            foreach ($sorts as $sort) {
+                $sortDetail = explode(':', $sort);
+                $sortColumn = $sortDetail[0];
+                $sortDirection = $sortDetail[1] ?? 'asc'; // Default ke ascend jika tidak ada arah yang diberikan
+                $sortableColumns = [
+                    'idJakwas', 'namaSubUnitAudit', 'namaUnitAudit', 'tahun',
+                    'namaJakwas', 'deskripsi', 'createdBy', // camelCase dari frontend
+                ];
+                if (in_array($sortColumn, $sortableColumns)) {
+                    $sortColumn = Str::snake($sortColumn); // Konversi ke snake_case untuk penggunaan dalam orderBy
+                    $query->orderBy($sortColumn, $sortDirection);
+                }
+            }
+        } else {
+            $query->orderBy('id_jakwas', 'desc');
+        }
+
+        $data = $query->paginate($request->perPage ? $request->perPage : 10);
         $data->getCollection()->transform(function ($data) {
+            $data->idPkpt = Hashids::encode($data->idPkpt);
             $data->idJakwas = Hashids::encode($data->idJakwas);
+            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
         $response = $data->toArray();
         $customResponse = Helper::paginateCustomResponseRen($response);
         return response()->json($customResponse, 200);
+
+        // ->where('ren_jakwas.tahun', '=', $request->tahun ? $request->tahun : date('Y'))
+        //     ->select($this->selectJakwas())
+        //     ->orderBy('ren_jakwas.id_jakwas', 'Desc')
+        //     ->paginate($request->perPage ? $request->perPage : 10);
+        // $data->getCollection()->transform(function ($data) {
+        //     $data->idJakwas = Hashids::encode($data->idJakwas);
+        //     return $data;
+        // });
+        // $response = $data->toArray();
+        // $customResponse = Helper::paginateCustomResponseRen($response);
+        // return response()->json($customResponse, 200);
     }
 
     /**

@@ -86,6 +86,8 @@ class PkptController extends Controller
         $whereData[] = array('nama_tingkat_resiko', 'LIKE', '%' . $request->namaTingkatResiko . '%' ? '%' . $request->namaTingkatResiko . '%' : '');
         $whereData[] = array('nama_bidang_obrik', 'LIKE', '%' . $request->namaBidangObrik . '%' ? '%' . $request->namaBidangObrik . '%' : '');
         $whereData[] = array('nama_pkpt', 'LIKE', '%' . $request->namaPkpt . '%' ? '%' . $request->namaPkpt . '%' : '');
+        $whereData[] = array('rmp', 'LIKE', '%' . $request->rmp . '%' ? '%' . $request->rmp . '%' : '');
+        $whereData[] = array('rpl', 'LIKE', '%' . $request->rpl . '%' ? '%' . $request->rpl . '%' : '');
         $whereData[] = array('created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
 
         $auth = Auth::user();
@@ -103,7 +105,7 @@ class PkptController extends Controller
                 $sortDirection = $sortDetail[1] ?? 'asc'; // Default ke ascend jika tidak ada arah yang diberikan
                 $sortableColumns = [
                     'namaSubUnitAudit', 'namaLingkupAudit', 'namaAreaPengawasan', 'namaJenisPengawasan',
-                    'namaTingkatResiko', 'namaBidangObrik', 'namaPkpt', 'createdBy', // camelCase dari frontend
+                    'namaTingkatResiko', 'namaBidangObrik', 'namaPkpt', 'rmp', 'rpl', 'createdBy', // camelCase dari frontend
                 ];
                 if (in_array($sortColumn, $sortableColumns)) {
                     $sortColumn = Str::snake($sortColumn); // Konversi ke snake_case untuk penggunaan dalam orderBy
