@@ -46,24 +46,30 @@ class JakwasController extends Controller
     public function index(Request $request)
     {
         $auth = Auth::user();
-        $idJakwasDecode = Hashids::decode($request->idJakwas);
-
-        $whereData = array();
-
-        // All Where ada di sini
-        $whereData[] = array('id_jakwas', '=', $idJakwasDecode ? $idJakwasDecode : '');
-        $whereData[] = array('tahun', '=', $request->tahun ? $request->tahun : date('Y'));
-        $whereData[] = array('nama_jakwas', 'LIKE', '%' . $request->namaJakwas . '%' ? '%' . $request->namaJakwas . '%' : '');
-        $whereData[] = array('deskripsi', 'LIKE', '%' . $request->deskripsi . '%' ? '%' . $request->deskripsi . '%' : '');
-        $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaSubUnitAudit . '%' ? '%' . $request->namaSubUnitAudit . '%' : '');
-        $whereData[] = array('ren_jakwas.created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
 
         $query = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
             ->select($this->selectJakwas())
             ->where('ren_jakwas.is_del', '=', 0)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
-            ->where($whereData);
+            ->when($request->idJakwas, function ($q) use ($request) {
+                $q->where('id_jakwas', '=', Hashids::decode($request->idJakwas));
+            })
+            ->when($request->tahun, function ($q) use ($request) {
+                $q->where('tahun', '=', $request->tahun);
+            })
+            ->when($request->namaJakwas, function ($q) use ($request) {
+                $q->where('nama_jakwas', 'LIKE', '%' . $request->namaJakwas . '%');
+            })
+            ->when($request->deskripsi, function ($q) use ($request) {
+                $q->where('deskripsi', 'LIKE', '%' . $request->deskripsi . '%');
+            })
+            ->when($request->namaSubUnitAudit, function ($q) use ($request) {
+                $q->where('nama_sub_unit_audit', 'LIKE', '%' . $request->namaSubUnitAudit . '%');
+            })
+            ->when($request->createdBy, function ($q) use ($request) {
+                $q->where('ren_jakwas.created_by', 'LIKE', '%' . $request->createdBy . '%');
+            });
 
         // Tangani sort by dari frontend
         if ($request->has('sort')) {
@@ -93,18 +99,6 @@ class JakwasController extends Controller
         $response = $data->toArray();
         $customResponse = Helper::paginateCustomResponseRen($response);
         return response()->json($customResponse, 200);
-
-        // ->where('ren_jakwas.tahun', '=', $request->tahun ? $request->tahun : date('Y'))
-        //     ->select($this->selectJakwas())
-        //     ->orderBy('ren_jakwas.id_jakwas', 'Desc')
-        //     ->paginate($request->perPage ? $request->perPage : 10);
-        // $data->getCollection()->transform(function ($data) {
-        //     $data->idJakwas = Hashids::encode($data->idJakwas);
-        //     return $data;
-        // });
-        // $response = $data->toArray();
-        // $customResponse = Helper::paginateCustomResponseRen($response);
-        // return response()->json($customResponse, 200);
     }
 
     /**
