@@ -35,6 +35,7 @@ class JakwasController extends Controller
             'tahun',
             'nama_jakwas as namaJakwas',
             'deskripsi',
+            'ren_jakwas.created_by',
         );
         return $querySelect;
     }
@@ -51,15 +52,15 @@ class JakwasController extends Controller
 
         // All Where ada di sini
         $whereData[] = array('id_jakwas', '=', $idJakwasDecode ? $idJakwasDecode : '');
-        $whereData[] = array('tahun', 'LIKE', $request->tahun ? $request->tahun : date('Y'));
-        $whereData[] = array('nama_jakwas', 'LIKE', $request->namaJakwas ? $request->namaJakwas : '');
-        $whereData[] = array('deskripsi', 'LIKE', $request->deskripsi ? $request->deskripsi : '');
+        $whereData[] = array('tahun', '=', $request->tahun ? $request->tahun : date('Y'));
+        $whereData[] = array('nama_jakwas', 'LIKE', '%' . $request->namaJakwas . '%' ? '%' . $request->namaJakwas . '%' : '');
+        $whereData[] = array('deskripsi', 'LIKE', '%' . $request->deskripsi . '%' ? '%' . $request->deskripsi . '%' : '');
         $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaSubUnitAudit . '%' ? '%' . $request->namaSubUnitAudit . '%' : '');
-        $whereData[] = array('nama_pkpt', 'LIKE', '%' . $request->namaPkpt . '%' ? '%' . $request->namaPkpt . '%' : '');
-        $whereData[] = array('created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
+        $whereData[] = array('ren_jakwas.created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
 
         $query = Jakwas::leftjoin('tr_kode_unit_audit as unit_audit', 'unit_audit.kode_unit_audit', '=', 'ren_jakwas.kode_unit_audit')
             ->leftjoin('tr_kode_sub_unit_audit as sub_unit_audit', 'sub_unit_audit.kode_sub_unit_audit', '=', 'ren_jakwas.kode_sub_unit_audit')
+            ->select($this->selectJakwas())
             ->where('ren_jakwas.is_del', '=', 0)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
             ->where($whereData);
@@ -86,9 +87,7 @@ class JakwasController extends Controller
 
         $data = $query->paginate($request->perPage ? $request->perPage : 10);
         $data->getCollection()->transform(function ($data) {
-            $data->idPkpt = Hashids::encode($data->idPkpt);
             $data->idJakwas = Hashids::encode($data->idJakwas);
-            $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
             return $data;
         });
         $response = $data->toArray();
