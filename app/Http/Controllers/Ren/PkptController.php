@@ -78,7 +78,6 @@ class PkptController extends Controller
         $whereData = array();
 
         // All Where ada di sini
-        $whereData[] = array('id_pkpt', '=', $request->idPkpt ? Hashids::decode($request->idPkpt) : '');
         $whereData[] = array('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'));
         $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaSubUnitAudit . '%' ? '%' . $request->namaSubUnitAudit . '%' : '');
         $whereData[] = array('nama_lingkup_audit', 'LIKE', '%' . $request->namaLingkupAudit . '%' ? '%' . $request->namaLingkupAudit . '%' : '');
@@ -95,6 +94,9 @@ class PkptController extends Controller
         $query = Pkpt::where('is_del', '=', 0)
             ->select($this->selectPkpt())
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->when($request->idPkpt, function ($q) use ($request) {
+                $q->where('id_pkpt', '=', Hashids::decode($request->idPkpt));
+            })
             ->where($whereData);
 
         // Tangani sort by dari frontend
