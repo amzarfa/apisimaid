@@ -21,6 +21,7 @@ Route::group(['middleware' => ['cors']], function () {
     Route::post('set-new-password', 'AuthController@setNewPassword');
 
     Route::get('ren/downloadpkpt/pdf', 'Ren\PkptController@downloadPkptPdf');
+    Route::get('test', 'Ren\PkptController@test');
 
     // Route After Login
     Route::group(['middleware' => ['auth:api']], function () {

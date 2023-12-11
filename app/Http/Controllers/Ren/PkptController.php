@@ -516,4 +516,11 @@ class PkptController extends Controller
         // Return the PDF as a blob
         return response($pdfBlob, 200, $headers);
     }
+
+    // Testing
+    public function test(Request $request)
+    {
+        $response = "BERHASIL LIHAT PAGE TEST";
+        return response()->json($response, 200);
+    }
 }
