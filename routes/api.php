@@ -20,6 +20,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::post('reset-link', 'AuthController@sendResetEmail');
     Route::post('set-new-password', 'AuthController@setNewPassword');
 
+    Route::get('ren/downloadpkpt/pdf', 'Ren\PkptController@downloadPkptPdf');
+
     // Route After Login
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('changepassword', 'ChangePasswordController@changePassword');

@@ -8,45 +8,63 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            width: 21cm;
-            height: 29.7cm;
-            margin: 0 auto;
-            padding: 20px;
-            /* Sesuaikan dengan kebutuhan padding Anda */
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            transform: rotate(-90deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         @page {
             size: A4 landscape;
+            margin: 1cm;
+            /* Margin atas, kanan, bawah, kiri */
             /* Gaya CSS khusus untuk pengaturan ukuran dan orientasi halaman */
+        }
+
+        /* Style the rest of your document as needed */
+        h3,
+        p,
+        table,
+        div {
+            width: 100%;
+            max-width: 100%;
+            /* Ubah dari 800px menjadi 100% */
+            box-sizing: border-box;
+        }
+
+        table {
+            margin-top: 5px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            /* Mengurangi padding agar muat di sisi kanan */
+            text-align: left;
+            font-size: 10px;
+            /* Ukuran font diperkecil */
+        }
+
+        h3 {
+            font-size: 16px;
+            /* Ukuran font diperkecil */
         }
 
         /* Tambahkan gaya CSS lainnya sesuai kebutuhan Anda */
     </style>
-
-    {{-- <style>
-        body {
-            font-family: Arial, sans-serif;
-            width: 29.7cm;
-            /* Ubah width dan height untuk orientasi landscape */
-            height: 21cm;
-            margin: 0 auto;
-            padding: 20px;
-            /* Sesuaikan dengan kebutuhan padding Anda */
-            box-sizing: border-box;
-            transform: rotate(-90deg);
-            /* Rotasi untuk orientasi landscape */
-            transform-origin: left top;
-        }
-
-        @page {
-            size: A4 landscape;
-            /* Gaya CSS khusus untuk pengaturan ukuran dan orientasi halaman */
-        }
-
-        /* Tambahkan gaya CSS lainnya sesuai kebutuhan Anda */
-    </style> --}}
 </head>
 
 <body style="font-family: Arial, sans-serif;">
@@ -87,6 +105,7 @@
                     <td>{{ $item['no'] }}</td>
                     <td>{{ $item['namaPkpt'] }}</td>
                     <td>{{ $item['deskripsiPkpt'] }}</td>
+                    <td>{{ $item['namaAreaPengawasan'] }}</td>
                     <td>{{ $item['jumlahHariPengawasanWpj'] }}</td>
                     <td>{{ $item['jumlahHariPengawasanSpv'] }}</td>
                     <td>{{ $item['jumlahHariPengawasanKt'] }}</td>
