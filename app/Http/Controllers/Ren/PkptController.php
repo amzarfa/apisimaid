@@ -434,9 +434,9 @@ class PkptController extends Controller
     // Export Pdf
     public function downloadPkptPdf(Request $request)
     {
-        $auth = Auth::user();
+        // $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 0)
-            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            // ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
             ->select($this->selectPkpt())
             ->orderBy('id_pkpt', 'Desc')
             ->get();
@@ -454,14 +454,13 @@ class PkptController extends Controller
             'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
             'data' => $data,
         ];
-        // return response()->json($response, 200);
 
-        // $pdf = PDF::loadView('exports.pkptexport', $data);
         $pdf = PDF::loadView('exports.pkptexport', [
             'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
             'data' => $data,
         ]);
-        return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
+        // return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
+        return $pdf->download('PKPT Export.pdf');
     }
 
     // Export Pdf
