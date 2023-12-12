@@ -133,6 +133,11 @@ class AuthController extends Controller
             return response()->json(['message' => 'Validasi gagal', 'errors' => $validator->errors()], 422);
         }
 
+        $idUser = User::where('email',$request->email)->first();
+        if(!$idUser){
+            return response()->json(['message' => 'User tidak ada'], 404);
+        }
+
         $status = Password::reset(
             $request->only('email', 'token', 'password', 'password_confirmation'),
             function ($user, $password) {
@@ -144,15 +149,14 @@ class AuthController extends Controller
 
         if ($status === Password::PASSWORD_RESET) {
             // Log Activity
-            $key = $request->email;
+            $key = $idUser->id;
             $page = 'Reset Password Baru';
             $activity = $request->email . ' melakukan Reset Password';
             $method = 'POST';
             Helper::createLogActivity($key, $page, $activity, $method);
-
             return response()->json(['message' => 'Password berhasil diubah'], 200);
         }
 
-        return response()->json(['message' => 'Gagal mereset password'], 500);
+        return response()->json(['message' => 'Gagal mereset password, token tidak valid'], 400);
     }
 }
