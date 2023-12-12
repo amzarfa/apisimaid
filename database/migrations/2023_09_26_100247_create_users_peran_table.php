@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('users_peran', function (Blueprint $table) {
             $table->string('kode_peran', 20)->primary();
             $table->string('nama_peran');
-            $table->string('modul');
-            $table->boolean('is_pusat')->default(false);
             $table->boolean('is_del')->default(false);
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\DB::raw('CURRENT_TIMESTAMP'));

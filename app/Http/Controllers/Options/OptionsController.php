@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\DB;
+use Vinkla\Hashids\Facades\Hashids;
 use App\Models\Masterdata\KodeUnitObrik;
 use App\Models\Masterdata\KodeBidangObrik;
 use App\Models\Masterdata\KodeSubBidangObrik;
@@ -17,7 +18,16 @@ use App\Models\Masterdata\KodeJenisPengawasan;
 use App\Models\Masterdata\KodeAreaPengawasan;
 use App\Models\Masterdata\KodeTingkatResiko;
 use App\Models\Ren\Jakwas;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Models\UsersPeran;
+use App\Models\Masterdata\KodePeran;
+use App\Models\Masterdata\KodeUnitAudit;
+use App\Models\Masterdata\KodeJenisAnggaran;
+use App\Models\Masterdata\KodeJenisObrik;
+use App\Models\Masterdata\KodeProvinsi;
+use App\Models\Masterdata\KodeKabkota;
+use App\Models\Masterdata\KodeKecamatan;
+use App\Models\Masterdata\KodeKelurahan;
+use App\Models\Masterdata\DataPegawai;
 
 class OptionsController extends Controller
 {
@@ -163,6 +173,139 @@ class OptionsController extends Controller
             $data->value = Hashids::encode($data->value);
             return $data;
         });
+        return response()->json($data, 200);
+    }
+
+    // Options Users Peran
+    public function optionusersperan(Request $request)
+    {
+        $auth = Auth::user();
+        $data = UsersPeran::select(
+            'kode_peran as value',
+            'nama_peran as label',
+        )
+            ->where('is_del', '=', 0)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Peran Tim
+    public function optionperantim(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodePeran::select(
+            'kode_peran as value',
+            'nama_peran as label',
+        )
+            ->where('is_del', '=', 0)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Unit Audit
+    public function optionunitaudit(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodeUnitAudit::select(
+            'kode_unit_audit as value',
+            'nama_unit_audit as label',
+        )
+            ->where('is_del', '=', 0)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Jenis Anggaran
+    public function optionjenisanggaran(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodeJenisAnggaran::select(
+            'kode_jenis_anggaran as value',
+            'nama_jenis_anggaran as label',
+        )
+            ->where('is_del', '=', 0)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Jenis Obrik
+    public function optionjenisobrik(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodeJenisObrik::select(
+            'kode_jenis_obrik as value',
+            'nama_jenis_obrik as label',
+        )
+            ->where('is_del', '=', 0)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Provinsi
+    public function optionprovinsi(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodeProvinsi::select(
+            'kode_provinsi as value',
+            'nama_provinsi as label',
+        )
+            ->where('is_del', '=', 0)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Kabkota
+    public function optionkabkota(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodeKabkota::select(
+            'kode_kabkota as value',
+            'nama_kabkota as label',
+        )
+            ->where('is_del', '=', 0)
+            ->where('kode_provinsi',$request->kodeProvinsi)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Kecamatan
+    public function optionkecamatan(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodeKecamatan::select(
+            'kode_kecamatan as value',
+            'nama_kecamatan as label',
+        )
+            ->where('is_del', '=', 0)
+            ->where('kode_kabkota',$request->kodeKabkota)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Kelurahan
+    public function optionkelurahan(Request $request)
+    {
+        $auth = Auth::user();
+        $data = KodeKelurahan::select(
+            'kode_kelurahan as value',
+            'nama_kelurahan as label',
+        )
+            ->where('is_del', '=', 0)
+            ->where('kode_kecamatan',$request->kodeKecamatan)
+            ->get();
+        return response()->json($data, 200);
+    }
+
+    // Options Data Pegawai
+    public function optiondatapegawai(Request $request)
+    {
+        $auth = Auth::user();
+        $data = DataPegawai::select(
+            'id as value',
+            DB::raw("CONCAT(nama, ' - ', nip) as label"),
+        )
+            ->where('is_del', '=', 0)
+            ->get();
         return response()->json($data, 200);
     }
 }

@@ -44,6 +44,17 @@ Route::group(['middleware' => ['cors']], function () {
         Route::get('options/tingkatresiko', 'Options\OptionsController@tingkatresiko');
         Route::get('options/optionjakwas', 'Options\OptionsController@optionjakwas');
 
+        Route::get('options/usersperan', 'Options\OptionsController@optionusersperan');
+        Route::get('options/perantim', 'Options\OptionsController@optionperantim');
+        Route::get('options/unitaudit', 'Options\OptionsController@optionunitaudit');
+        Route::get('options/jenisanggaran', 'Options\OptionsController@optionjenisanggaran');
+        Route::get('options/jenisobrik', 'Options\OptionsController@optionjenisobrik');
+        Route::get('options/provinsi', 'Options\OptionsController@optionprovinsi');
+        Route::get('options/kabkota', 'Options\OptionsController@optionkabkota');
+        Route::get('options/kecamatan', 'Options\OptionsController@optionkecamatan');
+        Route::get('options/kelurahan', 'Options\OptionsController@optionkelurahan');
+        Route::get('options/datapegawai', 'Options\OptionsController@optiondatapegawai');
+
         // Wilayah
         Route::resource('provinsi', 'Masterdata\KodeProvinsiController');
         Route::resource('kabkota', 'Masterdata\KodeKabkotaController');

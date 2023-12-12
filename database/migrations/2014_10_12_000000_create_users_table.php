@@ -25,10 +25,6 @@ return new class extends Migration
             $table->string('kode_bidang_obrik', 9)->index()->nullable();
             $table->string('nama_bidang_obrik')->nullable();
             $table->string('peran', 20)->nullable()->default('user');
-            $table->string('peran_ren', 20)->nullable();
-            $table->string('peran_lak', 20)->nullable();
-            $table->string('peran_por', 20)->nullable();
-            $table->string('peran_simhpnas', 20)->nullable();
             $table->rememberToken()->nullable();
             $table->string('status', 20)->nullable()->default('active');
             $table->timestamp('created_at')->nullable()->useCurrent();
