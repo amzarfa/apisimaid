@@ -12,7 +12,7 @@
     <p>Click the button below to reset your password:</p>
     <p>Email : {{ $email }}</p>
     <p>Token : {{ $token }}</p>
-    <a href="{{ 'https://simaid.amzar.id/reset-password&email=' . $email . '&token=' . $token }}"
+    <a href="{{ env('APP_FRONT_URL').'/auth/reset-password/create-new?email=' . $email . '&token=' . $token }}"
         style="padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none;">Reset Password</a>
     <p>If you did not request a password reset, no further action is required.</p>
     <p>Thank you!</p>
