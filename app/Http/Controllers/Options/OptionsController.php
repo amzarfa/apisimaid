@@ -168,6 +168,7 @@ class OptionsController extends Controller
         )
             ->where('is_del', '=', 0)
             ->where('ren_jakwas.kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('tahun', $request->tahun ? $request->tahun : date('Y'))
             ->get();
         $data->transform(function ($data) {
             $data->value = Hashids::encode($data->value);
@@ -263,7 +264,7 @@ class OptionsController extends Controller
             'nama_kabkota as label',
         )
             ->where('is_del', '=', 0)
-            ->where('kode_provinsi',$request->kodeProvinsi)
+            ->where('kode_provinsi', $request->kodeProvinsi)
             ->get();
         return response()->json($data, 200);
     }
@@ -277,7 +278,7 @@ class OptionsController extends Controller
             'nama_kecamatan as label',
         )
             ->where('is_del', '=', 0)
-            ->where('kode_kabkota',$request->kodeKabkota)
+            ->where('kode_kabkota', $request->kodeKabkota)
             ->get();
         return response()->json($data, 200);
     }
@@ -291,7 +292,7 @@ class OptionsController extends Controller
             'nama_kelurahan as label',
         )
             ->where('is_del', '=', 0)
-            ->where('kode_kecamatan',$request->kodeKecamatan)
+            ->where('kode_kecamatan', $request->kodeKecamatan)
             ->get();
         return response()->json($data, 200);
     }

@@ -13,17 +13,14 @@ class ReportController extends Controller
         $protocol = $request->secure() ? 'https' : 'http';
         $data = [
             [
-                'urlDownload' => url('/api/ren/downloadpkpt', [], $protocol),
+                // 'urlDownload' => url('/api/ren/downloadpkpt', [], $protocol),
+                'urlDownload' => '/api/ren/report/downloadpkpt',
                 'type' => 'xlsx',
                 'title' => 'Download List PKPT Excel',
             ],
             [
-                'urlDownload' => url('/api/ren/downloadpkau', [], $protocol),
-                'type' => 'xlsx',
-                'title' => 'Download List PKAU Excel',
-            ],
-            [
-                'urlDownload' => url('/api/ren/downloadpkpt/pdf', [], $protocol),
+                // 'urlDownload' => url('/api/ren/downloadpkpt/pdf', [], $protocol),
+                'urlDownload' => '/api/ren/report/downloadpkpt/pdf',
                 'type' => 'pdf',
                 'title' => 'Download List PKPT PDF',
             ],

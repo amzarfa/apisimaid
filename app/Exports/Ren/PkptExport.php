@@ -28,6 +28,43 @@ class PkptExport implements FromCollection, WithHeadings, ShouldAutoSize, WithEv
 
     public function headings(): array
     {
+        // return [
+        //     'idPkpt',
+        //     'idJakwas',
+        //     'namaPkpt',
+        //     'deskripsiPkpt',
+        //     'kodeSubUnitAudit',
+        //     'namaSubUnitAudit',
+        //     'kodeUnitAudit',
+        //     'namaUnitAudit',
+        //     'kodeLingkupAudit',
+        //     'namaLingkupAudit',
+        //     'kodeAreaPengawasan',
+        //     'namaAreaPengawasan',
+        //     'kodeJenisPengawasan',
+        //     'namaJenisPengawasan',
+        //     'kodeTingkatResiko',
+        //     'namaTingkatResiko',
+        //     'kodeBidangObrik',
+        //     'namaBidangObrik',
+        //     'tahunPkpt',
+        //     'rmp',
+        //     'rpl',
+        //     'jumlahHariPengawasanWpj',
+        //     'jumlahHariPengawasanSpv',
+        //     'jumlahHariPengawasanKt',
+        //     'jumlahHariPengawasanAt',
+        //     'jumlahHariPengawasan',
+        //     'anggaranBiaya',
+        //     'jumlahLhpTerbit',
+        //     'kebutuhanSarpras',
+        //     'keterangan',
+        //     'createdAt',
+        //     'updatedAt',
+        //     'createdBy',
+        //     'updatedBy',
+        // ];
+
         return [
             'idPkpt',
             'idJakwas',

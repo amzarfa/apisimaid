@@ -35,6 +35,8 @@ class PkptController extends Controller
         $querySelect = array(
             'id_pkpt as idPkpt',
             'id_jakwas as idJakwas',
+            'nama_pkpt as namaPkpt',
+            'deskripsi_pkpt as deskripsiPkpt',
             'kode_sub_unit_audit as kodeSubUnitAudit',
             'nama_sub_unit_audit as namaSubUnitAudit',
             'kode_unit_audit as kodeUnitAudit',
@@ -49,8 +51,6 @@ class PkptController extends Controller
             'nama_tingkat_resiko as namaTingkatResiko',
             'kode_bidang_obrik as kodeBidangObrik',
             'nama_bidang_obrik as namaBidangObrik',
-            'nama_pkpt as namaPkpt',
-            'deskripsi_pkpt as deskripsiPkpt',
             'tahun_pkpt as tahunPkpt',
             'rmp',
             'rpl',
