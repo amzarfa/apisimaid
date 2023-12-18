@@ -158,7 +158,7 @@ class PkptController extends Controller
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
         $idJakwas = Hashids::decode($request->idJakwas)[0];
-        if ($auth->peran != 'admin' || $auth->peran != 'perencanaan') {
+        if ($auth->peran != 'admin' && $auth->peran != 'perencanaan') {
             $response = Helper::labelMessageForbidden('menambah Data Pkpt');
             return response()->json($response, 403);
         } else {
@@ -262,7 +262,7 @@ class PkptController extends Controller
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
         $idJakwas = Hashids::decode($request->idJakwas)[0];
 
-        if ($auth->peran != 'admin' || $auth->peran != 'perencanaan') {
+        if ($auth->peran != 'admin' && $auth->peran != 'perencanaan') {
             $response = Helper::labelMessageForbidden('mengubah Data Pkpt');
             return response()->json($response, 403);
         } else {
@@ -324,7 +324,7 @@ class PkptController extends Controller
     {
         $auth = Auth::user();
         $id = Hashids::decode($id)[0];
-        if ($auth->peran != 'admin' || $auth->peran != 'perencanaan') {
+        if ($auth->peran != 'admin' && $auth->peran != 'perencanaan') {
             $response = Helper::labelMessageForbidden('menghapus Data Pkpt');
             return response()->json($response, 403);
         } else {
