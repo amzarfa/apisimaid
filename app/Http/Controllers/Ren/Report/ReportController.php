@@ -10,12 +10,12 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
-        // $protocol = $request->secure() ? 'https' : 'http';
+        $protocol = $request->secure() ? 'https' : 'http';
         $data = [
             [
                 // 'urlDownload' => url('/api/ren/report/downloadpkpt', [], $protocol),
                 // 'urlDownload' => url('/api/ren/report/downloadpkpt'),
-                'urlDownload' => url('backend/api/ren/report/downloadpkpt'),
+                'urlDownload' => url('backend/api/ren/report/downloadpkpt', [], $protocol),
                 // 'urlDownload' => '/api/ren/report/downloadpkpt',
                 'type' => 'xlsx',
                 'title' => 'Download List PKPT Excel',
@@ -23,7 +23,7 @@ class ReportController extends Controller
             [
                 // 'urlDownload' => url('/api/ren/report/downloadpkpt/pdf', [], $protocol),
                 // 'urlDownload' => url('/api/ren/report/downloadpkpt/pdf'),
-                'urlDownload' => url('backend/api/ren/report/downloadpkpt/pdf'),
+                'urlDownload' => url('backend/api/ren/report/downloadpkpt/pdf', [], $protocol),
                 // 'urlDownload' => '/api/ren/report/downloadpkpt/pdf',
                 'type' => 'pdf',
                 'title' => 'Download List PKPT PDF',
