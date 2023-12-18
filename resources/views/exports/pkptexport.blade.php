@@ -72,18 +72,21 @@
         <h3>LAMPIRAN KEPUTUSAN KEPALA DAERAH</h3>
         <p>
             <strong>NOMOR:</strong> _______________ <br>
-            <strong>TANGGAL:</strong> 02 JANUARI 2023 <br>
-            <strong>TENTANG:</strong> PENETAPAN PROGRAM KERJA PENGAWASAN TAHUNAN (PKPT) BERBASIS RESIKO TAHUN 2023
+            <strong>TANGGAL:</strong> {{ now()->format('d F Y') }} <br>
+            <strong>TENTANG:</strong> PENETAPAN PROGRAM KERJA PENGAWASAN TAHUNAN (PKPT) BERBASIS RESIKO TAHUN
+            {{ now()->addYear()->format('Y') }}
         </p>
     </div>
 
-    <table border="1" cellspacing="0" cellpadding="5" style="width: 100%;">
+    {{-- <table border="1" cellspacing="0" cellpadding="5" style="width: 100%;">
         <thead>
             <tr>
                 <th rowspan="2">Nomor</th>
                 <th rowspan="2">Nama PKPT</th>
                 <th rowspan="2">Deskripsi PKPT</th>
                 <th rowspan="2">Area Pengawasan</th>
+                <th rowspan="2">Jenis Pengawasan</th>
+                <th rowspan="2">Lingkup Pengawasan</th>
                 <th colspan="5">Hari Pengawasan</th>
                 <th rowspan="2">Anggaran</th>
                 <th rowspan="2">Jumlah Laporan</th>
@@ -106,6 +109,8 @@
                     <td>{{ $item['namaPkpt'] }}</td>
                     <td>{{ $item['deskripsiPkpt'] }}</td>
                     <td>{{ $item['namaAreaPengawasan'] }}</td>
+                    <td>{{ $item['namaJenisPengawasan'] }}</td>
+                    <td>{{ $item['namaLingkupAudit'] }}</td>
                     <td>{{ $item['jumlahHariPengawasanWpj'] }}</td>
                     <td>{{ $item['jumlahHariPengawasanSpv'] }}</td>
                     <td>{{ $item['jumlahHariPengawasanKt'] }}</td>
@@ -119,14 +124,86 @@
                 </tr>
             @endforeach
         </tbody>
-    </table>
+    </table> --}}
+
+    @foreach ($groupedData as $groupedData => $items)
+        {{-- <h5>{{ $groupedData }}</h5> --}}
+        <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; ">
+            <thead>
+                <tr>
+                    <th colspan="16">{{ $groupedData }}</th>
+                </tr>
+                <tr>
+                    <th rowspan="2">Nomor</th>
+                    <th rowspan="2">Nama PKPT</th>
+                    <th rowspan="2">Deskripsi PKPT</th>
+                    <th rowspan="2">Jenis Pengawasan</th>
+                    <th rowspan="2">Area Pengawasan</th>
+                    <th rowspan="2">Lingkup Pengawasan</th>
+                    <th colspan="5">Hari Pengawasan</th>
+                    <th rowspan="2">Anggaran</th>
+                    <th rowspan="2">Jumlah Laporan</th>
+                    <th rowspan="2">Sarana dan Prasarana</th>
+                    <th rowspan="2">Tingkat Risiko</th>
+                    <th rowspan="2">Keterangan</th>
+                </tr>
+                <tr>
+                    <th>WPJ</th>
+                    <th>SPV/ PT</th>
+                    <th>KT</th>
+                    <th>AT</th>
+                    <th>Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($items as $item)
+                    <tr>
+                        <td>{{ $item['no'] }}</td>
+                        <td>{{ $item['namaPkpt'] }}</td>
+                        <td>{{ $item['deskripsiPkpt'] }}</td>
+                        <td>{{ $item['namaJenisPengawasan'] }}</td>
+                        <td>{{ $item['namaAreaPengawasan'] }}</td>
+                        <td>{{ $item['namaLingkupAudit'] }}</td>
+                        <td>{{ $item['jumlahHariPengawasanWpj'] }}</td>
+                        <td>{{ $item['jumlahHariPengawasanSpv'] }}</td>
+                        <td>{{ $item['jumlahHariPengawasanKt'] }}</td>
+                        <td>{{ $item['jumlahHariPengawasanAt'] }}</td>
+                        <td>{{ $item['jumlahHariPengawasan'] }}</td>
+                        <td>{{ $item['anggaranBiaya'] }}</td>
+                        <td>{{ $item['jumlahLhpTerbit'] }}</td>
+                        <td>{{ $item['kebutuhanSarpras'] }}</td>
+                        <td>{{ $item['namaTingkatResiko'] }}</td>
+                        <td>{{ $item['keterangan'] }}</td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td colspan="5">Jumlah PKPT</td>
+                    <!-- colspan should match the number of columns before 'Anggaran' -->
+                    <td>{{ $jumlahPkptPerNamaJenisPengawasan[$groupedData] }}
+                    </td>
+                    <td colspan="5">Total Anggaran</td>
+                    <td>{{ number_format($totalAnggaranPerNamaJenisPengawasan[$groupedData], 2, ',', '.') }}
+                    </td>
+                    <td colspan="4"></td> <!-- colspan should match the number of columns after 'Anggaran' -->
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-bottom: 40px;"></p>
+    @endforeach
 
     <div style="width: 100%; margin-bottom: 20px;">
-        <h3>Total</h3>
+        {{-- <table border="none" cellspacing="0" cellpadding="5" style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td colspan="12">Total Anggaran</td>
+                    <!-- colspan should match the number of columns before 'Anggaran' -->
+                    <td>{{ $totalAnggaran }}
+                    </td>
+                </tr>
+            </tbody>
+        </table> --}}
         <p>
             <strong>Total Anggaran:</strong> {{ $totalAnggaran }} <br>
-            <strong>TANGGAL:</strong> 02 JANUARI 2023 <br>
-            <strong>TENTANG:</strong> PENETAPAN PROGRAM KERJA PENGAWASAN TAHUNAN (PKPT) BERBASIS RESIKO TAHUN 2023
         </p>
     </div>
 </body>

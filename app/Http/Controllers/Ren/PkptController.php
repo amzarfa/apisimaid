@@ -469,8 +469,23 @@ class PkptController extends Controller
         $data = Pkpt::where('is_del', '=', 0)
             // ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
             ->select($this->selectPkpt())
+            ->orderBy('namaJenisPengawasan') // Tambahan
             ->orderBy('id_pkpt', 'Desc')
             ->get();
+
+        $groupedData = $data->groupBy('namaJenisPengawasan');
+        $totalAnggaranPerNamaJenisPengawasan = [];
+        foreach ($groupedData as $namaJenisPengawasan => $group) {
+            $totalAnggaranPerNamaJenisPengawasan[$namaJenisPengawasan] = $group->sum('anggaranBiaya');
+        }
+
+        $jumlahPkptPerNamaJenisPengawasan = [];
+        foreach ($groupedData as $jumlahPkpt => $group) {
+            $jumlahPkptPerNamaJenisPengawasan[$jumlahPkpt] = $group->count('idPkpt');
+        }
+
+        // dd($jumlahPkptPerNamaJenisPengawasan);
+        // die();
 
         $totalAnggaran = $data->sum('anggaranBiaya');
         $data->transform(function ($data, $key) {
@@ -488,10 +503,21 @@ class PkptController extends Controller
 
         $dompdf = new Dompdf($options);
 
+        $result = [
+            'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
+            'data' => $data,
+            'groupedData' => $groupedData,
+            'totalAnggaranPerNamaJenisPengawasan' => $totalAnggaranPerNamaJenisPengawasan,
+            'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
+        ];
+
         // Load view content into a variable
         $viewContent = view('exports.pkptexport', [
             'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
             'data' => $data,
+            'groupedData' => $groupedData,
+            'totalAnggaranPerNamaJenisPengawasan' => $totalAnggaranPerNamaJenisPengawasan,
+            'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
         ])->render();
 
         // Load HTML content into Dompdf
