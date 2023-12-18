@@ -14,14 +14,16 @@ class ReportController extends Controller
         $data = [
             [
                 // 'urlDownload' => url('/api/ren/report/downloadpkpt', [], $protocol),
-                'urlDownload' => url('/api/ren/report/downloadpkpt'),
+                // 'urlDownload' => url('/api/ren/report/downloadpkpt'),
+                'urlDownload' => url('backend/api/ren/report/downloadpkpt'),
                 // 'urlDownload' => '/api/ren/report/downloadpkpt',
                 'type' => 'xlsx',
                 'title' => 'Download List PKPT Excel',
             ],
             [
                 // 'urlDownload' => url('/api/ren/report/downloadpkpt/pdf', [], $protocol),
-                'urlDownload' => url('/api/ren/report/downloadpkpt/pdf'),
+                // 'urlDownload' => url('/api/ren/report/downloadpkpt/pdf'),
+                'urlDownload' => url('backend/api/ren/report/downloadpkpt/pdf'),
                 // 'urlDownload' => '/api/ren/report/downloadpkpt/pdf',
                 'type' => 'pdf',
                 'title' => 'Download List PKPT PDF',
