@@ -414,9 +414,9 @@ class PkptController extends Controller
     // Export Excel
     public function downloadPkpt(Request $request)
     {
-        $auth = Auth::user();
+        // $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 0)
-            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            // ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
             ->where('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'))
             ->select($this->selectPkpt())
             ->orderBy('id_pkpt', 'Desc')
@@ -428,15 +428,16 @@ class PkptController extends Controller
             return $data;
         });
         $response = $data;
-        return Excel::download(new PkptExport($response), 'PKPT Export ' . $auth->nama_unit_audit . '.xlsx');
+        // return Excel::download(new PkptExport($response), 'PKPT Export ' . $auth->nama_unit_audit . '.xlsx');
+        return Excel::download(new PkptExport($response), 'PKPT Export.xlsx');
     }
 
     // Export Pdf
     public function downloadPkptPdf(Request $request)
     {
-        $auth = Auth::user();
+        // $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 0)
-            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            // ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
             ->select($this->selectPkpt())
             ->orderBy('namaJenisPengawasan') // Tambahan
             ->orderBy('id_pkpt', 'Desc')
@@ -481,7 +482,8 @@ class PkptController extends Controller
             'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
         ]);
 
-        return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
+        // return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
+        return $pdf->download('PKPT Export.pdf');
     }
 
     // Export Pdf

@@ -23,6 +23,9 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('ren/report/downloadpkptview/pdf', 'Ren\PkptController@downloadPkptPdf');
     Route::get('test', 'Ren\PkptController@test');
 
+    Route::get('ren/report/downloadpkpt', 'Ren\PkptController@downloadPkpt');
+    Route::get('ren/report/downloadpkpt/pdf', 'Ren\PkptController@downloadPkptPdf');
+
     // Route After Login
     Route::group(['middleware' => ['auth:api']], function () {
         Route::post('changepassword', 'ChangePasswordController@changePassword');
@@ -94,8 +97,8 @@ Route::group(['middleware' => ['cors']], function () {
         Route::get('ren/datapkptinactive', 'Ren\PkptController@pkptInactive');
         Route::patch('ren/activatepkpt/{id}', 'Ren\PkptController@activatePkpt');
         Route::get('ren/searchpkpt', 'Ren\PkptController@search');
-        Route::get('ren/report/downloadpkpt', 'Ren\PkptController@downloadPkpt');
-        Route::get('ren/report/downloadpkpt/pdf', 'Ren\PkptController@downloadPkptPdf');
+        // Route::get('ren/report/downloadpkpt', 'Ren\PkptController@downloadPkpt');
+        // Route::get('ren/report/downloadpkpt/pdf', 'Ren\PkptController@downloadPkptPdf');
 
         // PKAU
         Route::resource('ren/pkau', 'Ren\PkauController');
