@@ -51,9 +51,11 @@ class PkptController extends Controller
             'nama_tingkat_resiko as namaTingkatResiko',
             'kode_bidang_obrik as kodeBidangObrik',
             'nama_bidang_obrik as namaBidangObrik',
+            'tujuan_sasaran as tujuanSasaran',
             'tahun_pkpt as tahunPkpt',
             'rmp',
             'rpl',
+            'jumlah_hp_pj as jumlahHariPengawasanPj',
             'jumlah_hp_wpj as jumlahHariPengawasanWpj',
             'jumlah_hp_spv as jumlahHariPengawasanSpv',
             'jumlah_hp_kt as jumlahHariPengawasanKt',
@@ -156,7 +158,7 @@ class PkptController extends Controller
         $namaTingkatResiko = Helper::getNamaTingkatResiko($request->kodeTingkatResiko);
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
         $idJakwas = Hashids::decode($request->idJakwas)[0];
-        if ($auth->peran != 'admin') {
+        if ($auth->peran != 'admin' || $auth->peran != 'perencanaan') {
             $response = Helper::labelMessageForbidden('menambah Data Pkpt');
             return response()->json($response, 403);
         } else {
@@ -177,11 +179,13 @@ class PkptController extends Controller
             $storeData->nama_tingkat_resiko = $namaTingkatResiko;
             $storeData->kode_bidang_obrik = $request->kodeBidangObrik;
             $storeData->nama_bidang_obrik = $namaBidangObrik;
+            $storeData->tujuan_sasaran = $request->tujuanSasaran;
             $storeData->nama_pkpt = $request->namaPkpt;
             $storeData->deskripsi_pkpt = $request->deskripsiPkpt;
             $storeData->tahun_pkpt = $request->tahunPkpt;
             $storeData->rmp = $request->rmp;
             $storeData->rpl = $request->rpl;
+            $storeData->jumlah_hp_pj = $request->jumlahHariPengawasanPj;
             $storeData->jumlah_hp_wpj = $request->jumlahHariPengawasanWpj;
             $storeData->jumlah_hp_spv = $request->jumlahHariPengawasanSpv;
             $storeData->jumlah_hp_kt = $request->jumlahHariPengawasanKt;
@@ -258,7 +262,7 @@ class PkptController extends Controller
         $namaBidangObrik = Helper::getNamaBidangObrik($request->kodeBidangObrik);
         $idJakwas = Hashids::decode($request->idJakwas)[0];
 
-        if ($auth->peran != 'admin') {
+        if ($auth->peran != 'admin' || $auth->peran != 'perencanaan') {
             $response = Helper::labelMessageForbidden('mengubah Data Pkpt');
             return response()->json($response, 403);
         } else {
@@ -279,6 +283,7 @@ class PkptController extends Controller
                     'nama_tingkat_resiko' => $namaTingkatResiko,
                     'kode_bidang_obrik' => $request->kodeBidangObrik,
                     'nama_bidang_obrik' => $namaBidangObrik,
+                    'tujuan_sasaran' => $request->tujuanSasaran,
                     'nama_pkpt' => $request->namaPkpt,
                     'deskripsi_pkpt' => $request->deskripsiPkpt,
                     'tahun_pkpt' => $request->tahunPkpt,
@@ -319,7 +324,7 @@ class PkptController extends Controller
     {
         $auth = Auth::user();
         $id = Hashids::decode($id)[0];
-        if ($auth->peran != 'admin') {
+        if ($auth->peran != 'admin' || $auth->peran != 'perencanaan') {
             $response = Helper::labelMessageForbidden('menghapus Data Pkpt');
             return response()->json($response, 403);
         } else {
@@ -471,8 +476,6 @@ class PkptController extends Controller
             'totalAnggaranPerNamaJenisPengawasan' => $totalAnggaranPerNamaJenisPengawasan,
             'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
         ];
-        // dd($response);
-        // die();
 
         $pdf = PDF::loadView('exports.pkptexport', [
             'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),

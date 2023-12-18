@@ -30,11 +30,14 @@ return new class extends Migration
             $table->char('kode_bidang_obrik', 9)->index()->nullable();
             $table->string('nama_bidang_obrik')->nullable();
 
+            $table->text('tujuan_sasaran')->nullable();
+
             $table->string('nama_pkpt')->nullable();
             $table->text('deskripsi_pkpt')->nullable();
             $table->year('tahun_pkpt')->nullable();
             $table->date('rmp')->nullable();
             $table->date('rpl')->nullable();
+            $table->smallInteger('jumlah_hp_pj')->nullable();
             $table->smallInteger('jumlah_hp_wpj')->nullable();
             $table->smallInteger('jumlah_hp_spv')->nullable();
             $table->smallInteger('jumlah_hp_kt')->nullable();
