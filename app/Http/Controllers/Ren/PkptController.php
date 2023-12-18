@@ -432,42 +432,11 @@ class PkptController extends Controller
     }
 
     // Export Pdf
-    // public function downloadPkptPdf(Request $request)
-    // {
-    //     $auth = Auth::user();
-    //     $data = Pkpt::where('is_del', '=', 0)
-    //         ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
-    //         ->select($this->selectPkpt())
-    //         ->orderBy('id_pkpt', 'Desc')
-    //         ->get();
-
-    //     $totalAnggaran = $data->sum('anggaranBiaya');
-    //     $data->transform(function ($data, $key) {
-    //         $data->no = $key + 1;
-    //         $data->idPkpt = Hashids::encode($data->idPkpt);
-    //         $data->idJakwas = Hashids::encode($data->idJakwas);
-    //         $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
-    //         return $data;
-    //     });
-
-    //     $response = [
-    //         'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
-    //         'data' => $data,
-    //     ];
-
-    //     $pdf = PDF::loadView('exports.pkptexport', [
-    //         'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
-    //         'data' => $data,
-    //     ]);
-    //     return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
-    // }
-
-    // Export Pdf
     public function downloadPkptPdf(Request $request)
     {
-        // $auth = Auth::user();
+        $auth = Auth::user();
         $data = Pkpt::where('is_del', '=', 0)
-            // ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+            ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
             ->select($this->selectPkpt())
             ->orderBy('namaJenisPengawasan') // Tambahan
             ->orderBy('id_pkpt', 'Desc')
@@ -484,9 +453,6 @@ class PkptController extends Controller
             $jumlahPkptPerNamaJenisPengawasan[$jumlahPkpt] = $group->count('idPkpt');
         }
 
-        // dd($jumlahPkptPerNamaJenisPengawasan);
-        // die();
-
         $totalAnggaran = $data->sum('anggaranBiaya');
         $data->transform(function ($data, $key) {
             $data->no = $key + 1;
@@ -496,52 +462,109 @@ class PkptController extends Controller
             return $data;
         });
 
-        // Setup Dompdf
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true);
-
-        $dompdf = new Dompdf($options);
-
-        $result = [
+        // mulai dari sini download pdf
+        $response = [
             'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
             'data' => $data,
             'groupedData' => $groupedData,
             'totalAnggaranPerNamaJenisPengawasan' => $totalAnggaranPerNamaJenisPengawasan,
             'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
         ];
+        // dd($response);
+        // die();
 
-        // Load view content into a variable
-        $viewContent = view('exports.pkptexport', [
+        $pdf = PDF::loadView('exports.pkptexport', [
             'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
             'data' => $data,
             'groupedData' => $groupedData,
             'totalAnggaranPerNamaJenisPengawasan' => $totalAnggaranPerNamaJenisPengawasan,
             'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
-        ])->render();
+        ]);
 
-        // Load HTML content into Dompdf
-        $dompdf->loadHtml($viewContent);
-
-        // Set paper size
-        $dompdf->setPaper('A4', 'landscape');
-
-        // Render PDF (first pass to get the total pages)
-        $dompdf->render();
-
-        // Output the PDF as a blob
-        $pdfBlob = $dompdf->output();
-
-        // Set response headers
-        $headers = [
-            'Content-Type' => 'application/pdf',
-            // 'Content-Disposition' => 'inline; filename="PKPT Export ' . $auth->nama_unit_audit . '.pdf"',
-            'Content-Disposition' => 'inline; filename="PKPT Export.pdf"',
-        ];
-
-        // Return the PDF as a blob
-        return response($pdfBlob, 200, $headers);
+        return $pdf->download('PKPT Export ' . $auth->nama_unit_audit . '.pdf');
     }
+
+    // Export Pdf
+    // public function downloadPkptPdf(Request $request)
+    // {
+    //     // $auth = Auth::user();
+    //     $data = Pkpt::where('is_del', '=', 0)
+    //         // ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
+    //         ->select($this->selectPkpt())
+    //         ->orderBy('namaJenisPengawasan') // Tambahan
+    //         ->orderBy('id_pkpt', 'Desc')
+    //         ->get();
+
+    //     $groupedData = $data->groupBy('namaJenisPengawasan');
+    //     $totalAnggaranPerNamaJenisPengawasan = [];
+    //     foreach ($groupedData as $namaJenisPengawasan => $group) {
+    //         $totalAnggaranPerNamaJenisPengawasan[$namaJenisPengawasan] = $group->sum('anggaranBiaya');
+    //     }
+
+    //     $jumlahPkptPerNamaJenisPengawasan = [];
+    //     foreach ($groupedData as $jumlahPkpt => $group) {
+    //         $jumlahPkptPerNamaJenisPengawasan[$jumlahPkpt] = $group->count('idPkpt');
+    //     }
+
+    //     // dd($jumlahPkptPerNamaJenisPengawasan);
+    //     // die();
+
+    //     $totalAnggaran = $data->sum('anggaranBiaya');
+    //     $data->transform(function ($data, $key) {
+    //         $data->no = $key + 1;
+    //         $data->idPkpt = Hashids::encode($data->idPkpt);
+    //         $data->idJakwas = Hashids::encode($data->idJakwas);
+    //         $data->anggaranBiaya = number_format($data->anggaranBiaya, 2, ',', '.');
+    //         return $data;
+    //     });
+
+    //     // Setup Dompdf
+    //     $options = new Options();
+    //     $options->set('isHtml5ParserEnabled', true);
+    //     $options->set('isPhpEnabled', true);
+
+    //     $dompdf = new Dompdf($options);
+
+    //     $result = [
+    //         'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
+    //         'data' => $data,
+    //         'groupedData' => $groupedData,
+    //         'totalAnggaranPerNamaJenisPengawasan' => $totalAnggaranPerNamaJenisPengawasan,
+    //         'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
+    //     ];
+
+    //     // Load view content into a variable
+    //     $viewContent = view('exports.pkptexport', [
+    //         'totalAnggaran' => number_format($totalAnggaran, 2, ',', '.'),
+    //         'data' => $data,
+    //         'groupedData' => $groupedData,
+    //         'totalAnggaranPerNamaJenisPengawasan' => $totalAnggaranPerNamaJenisPengawasan,
+    //         'jumlahPkptPerNamaJenisPengawasan' => $jumlahPkptPerNamaJenisPengawasan,
+    //     ])->render();
+
+    //     // Load HTML content into Dompdf
+    //     $dompdf->loadHtml($viewContent);
+
+    //     // Set paper size
+    //     $dompdf->setPaper('A4', 'landscape');
+
+    //     // Render PDF (first pass to get the total pages)
+    //     $dompdf->render();
+
+    //     // Output the PDF as a blob
+    //     $pdfBlob = $dompdf->output();
+
+    //     // Set response headers
+    //     $headers = [
+    //         'Content-Type' => 'application/pdf',
+    //         // 'Content-Disposition' => 'inline; filename="PKPT Export ' . $auth->nama_unit_audit . '.pdf"',
+    //         'Content-Disposition' => 'inline; filename="PKPT Export.pdf"',
+    //     ];
+
+    //     // Return the PDF as a blob
+    //     // return response($pdfBlob, 200, $headers);
+    //     return $pdfBlob->download('PKPT Export.pdf');
+    // }
 
     // Testing
     public function test(Request $request)
