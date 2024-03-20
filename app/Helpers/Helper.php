@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\URL;
 
 class Helper
 {
-    public static function createLogActivity($key, $page, $activity, $method)
+    public static function createLogActivity($key, $page, $activity, $method, $keyname)
     {
         $auth = Auth::user();
         if (!$auth) {
@@ -27,6 +27,7 @@ class Helper
             'activity' => $activity,
             'method' => $method,
             'key' => $key,
+            'keyname' => $keyname,
         ]);
     }
 
@@ -242,7 +243,8 @@ class Helper
         $page = 'Upload Logo Unit Audit';
         $activity = $auth->name . ' mengupload Logo Unit Audit. Kode Unit Audit : ' . $kodeUnitAudit . '. Path Logo : ' . $path;
         $method = 'UPLOAD';
-        Helper::createLogActivity($key, $page, $activity, $method);
+        $keyname = $path;
+        Helper::createLogActivity($key, $page, $activity, $method, $keyname);
 
         $response = array(
             'status' => true,
@@ -273,7 +275,8 @@ class Helper
         $page = 'Upload File ' . $folder;
         $activity = $auth->name . ' mengupload File ' . $folder . '. Kode Unit Audit : ' . $kodeUnitAudit . '. Path File : ' . $path;
         $method = 'UPLOAD';
-        Helper::createLogActivity($key, $page, $activity, $method);
+        $keyname = $path;
+        Helper::createLogActivity($key, $page, $activity, $method, $keyname);
 
         $response = array(
             'status' => true,

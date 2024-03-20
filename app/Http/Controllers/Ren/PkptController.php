@@ -77,9 +77,9 @@ class PkptController extends Controller
     public function index(Request $request)
     {
         $auth = Auth::user();
-        $whereData = array();
 
-        // All Where ada di sini
+        // All where ada di sini
+        $whereData = array();
         $whereData[] = array('tahun_pkpt', '=', $request->tahun ? $request->tahun : date('Y'));
         $whereData[] = array('nama_sub_unit_audit', 'LIKE', '%' . $request->namaSubUnitAudit . '%' ? '%' . $request->namaSubUnitAudit . '%' : '');
         $whereData[] = array('nama_lingkup_audit', 'LIKE', '%' . $request->namaLingkupAudit . '%' ? '%' . $request->namaLingkupAudit . '%' : '');
@@ -92,7 +92,6 @@ class PkptController extends Controller
         $whereData[] = array('rpl', 'LIKE', '%' . $request->rpl . '%' ? '%' . $request->rpl . '%' : '');
         $whereData[] = array('created_by', 'LIKE', '%' . $request->createdBy . '%' ? '%' . $request->createdBy . '%' : '');
 
-        $auth = Auth::user();
         $query = Pkpt::where('is_del', '=', 0)
             ->select($this->selectPkpt())
             ->where('kode_unit_audit', '=', $auth->kode_unit_audit)
@@ -117,7 +116,10 @@ class PkptController extends Controller
                     $query->orderBy($sortColumn, $sortDirection);
                 }
             }
+            // return response()->json("Ada Sort By", 200);
+            $query->orderBy('id_pkpt', 'desc');
         } else {
+            // return response()->json("Tidak Ada Sort By", 200);
             $query->orderBy('id_pkpt', 'desc');
         }
 
@@ -201,7 +203,8 @@ class PkptController extends Controller
             $page = 'Tambah Data Pkpt';
             $activity = $auth->name . ' menambah Data Pkpt. Id Pkpt : ' . $key;
             $method = 'POST';
-            Helper::createLogActivity($key, $page, $activity, $method);
+            $keyname = $request->namaPkpt;
+            Helper::createLogActivity($key, $page, $activity, $method, $keyname);
 
             // Response
             $id = Hashids::encode($storeData->id);
@@ -248,7 +251,7 @@ class PkptController extends Controller
     public function update(Request $request, string $id)
     {
         $auth = Auth::user();
-        $idPkpt = Hashids::decode($id)[0];
+        $id = Hashids::decode($id)[0];
         $namaSubUnitAudit = Helper::getNamaSubUnitAudit($request->kodeSubUnitAudit);
         $namaUnitAudit = Helper::getNamaUnitAudit($auth->kode_unit_audit);
         $namaLingkupAudit = Helper::getNamaLingkupAudit($request->kodeLingkupAudit);
@@ -262,7 +265,7 @@ class PkptController extends Controller
             $response = Helper::labelMessageForbidden('mengubah Data Pkpt');
             return response()->json($response, 403);
         } else {
-            $data = Pkpt::where('id_pkpt', '=', $idPkpt)
+            $data = Pkpt::where('id_pkpt', '=', $id)
                 ->update([
                     'id_jakwas' => $idJakwas,
                     'kode_sub_unit_audit' => $request->kodeSubUnitAudit,
@@ -303,7 +306,8 @@ class PkptController extends Controller
             $page = 'Ubah Data Pkpt';
             $activity = $auth->name . ' mengubah Data Pkpt. Id Pkpt : ' . $key;
             $method = 'PATCH';
-            Helper::createLogActivity($key, $page, $activity, $method);
+            $keyname = $request->namaPkpt;
+            Helper::createLogActivity($key, $page, $activity, $method, $keyname);
 
             // Response
             $id = Hashids::encode($id);
@@ -333,7 +337,8 @@ class PkptController extends Controller
             $page = 'Hapus Data Pkpt';
             $activity = $auth->name . ' menghapus Data Pkpt. Id Pkpt : ' . $key;
             $method = 'DELETE';
-            Helper::createLogActivity($key, $page, $activity, $method);
+            $keyname = Pkpt::select('nama_pkpt')->where('id_pkpt', '=', $id)->first();
+            Helper::createLogActivity($key, $page, $activity, $method, $keyname);
 
             // Response
             $id = Hashids::encode($id);
@@ -381,7 +386,8 @@ class PkptController extends Controller
             $page = 'Aktivasi Data Pkpt';
             $activity = $auth->name . ' mengaktivasi Data Pkpt. Id Pkpt : ' . $key;
             $method = 'PATCH';
-            Helper::createLogActivity($key, $page, $activity, $method);
+            $keyname = Pkpt::select('nama_pkpt')->where('id_pkpt', '=', $id)->first();
+            Helper::createLogActivity($key, $page, $activity, $method, $keyname);
 
             // Response
             $id = Hashids::encode($id);
